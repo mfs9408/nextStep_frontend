@@ -1,0 +1,7 @@
+{
+  "plugins": ["prettier-plugin-tailwindcss", "prettier-plugin-sort-imports"],
+  "importOrder": ["^[a-zA-Z]"],
+  "importOrderSortSpecifiers": true,
+  "importOrderSeparation": false,
+  "importOrderCaseInsensitive": true
+}
