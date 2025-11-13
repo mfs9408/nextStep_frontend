@@ -1,6 +1,5 @@
 import type { AxiosError, AxiosResponse } from "axios";
 
-/** Формат, который возвращает твой backend */
 export interface BackendResponse<T> {
   status: number;
   message?: string;

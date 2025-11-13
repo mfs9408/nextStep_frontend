@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Route } from "@/enums/route";
 import { login } from "@/api/auth";
+import { AxiosError } from "axios";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -31,13 +32,12 @@ const Page = () => {
       .then(() => router.push(Route.DASHBOARD))
       .catch(
         (
-          error: ApiErrorResponse<{
-            error: string;
-            message: string;
+          error: AxiosError<{
             statusCode: number;
+            message: string;
           }>,
         ) => {
-          toast.error(error.message || "Unable to login");
+          toast.error(error?.response?.data.message || "Unable to login");
         },
       );
     setIsLoading(false);
