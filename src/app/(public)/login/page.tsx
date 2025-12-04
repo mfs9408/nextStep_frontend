@@ -17,7 +17,7 @@ const Page = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { handleSubmit, control } = useForm<LoginInterface>({
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: "foo@gmail.com", password: "123456" },
   });
 
   const onSubmit = async (data: LoginInterface) => {
@@ -95,7 +95,10 @@ const Page = () => {
             <Button>Submit</Button>
             <p className="text-sm text-muted-foreground">
               Don&apos;t have an account?
-              <a href="/register" className="underline underline-offset-4 ml-1">
+              <a
+                href={Route.REGISTER}
+                className="underline underline-offset-4 ml-1"
+              >
                 Sign up
               </a>
             </p>

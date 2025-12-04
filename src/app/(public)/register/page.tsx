@@ -30,7 +30,9 @@ const Page = () => {
   const onSubmit = async (data: CreateUserInterface) => {
     setIsLoading(true);
     await register(data)
-      .then(() => router.push(Route.DASHBOARD))
+      .then(() => {
+        router.push(Route.DASHBOARD);
+      })
       .catch(
         (
           error: AxiosError<{
@@ -163,7 +165,10 @@ const Page = () => {
             <Button>Submit</Button>
             <p className="text-sm text-muted-foreground">
               Already have an account?
-              <a href="/register" className="underline underline-offset-4 ml-1">
+              <a
+                href={Route.LOGIN}
+                className="underline underline-offset-4 ml-1"
+              >
                 Sign in!
               </a>
             </p>
