@@ -11,3 +11,7 @@ export const register = async (
 ): Promise<AxiosResponse> => {
   return await post("/auth/register", body);
 };
+
+export const refreshSession = async () => {
+  return await post("/auth/session/refresh");
+}

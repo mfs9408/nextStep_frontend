@@ -1,7 +1,7 @@
 export enum Route {
   LOGIN = "/login",
   REGISTER = "/register",
-  DASHBOARD = "/app/dashboard",
+  DASHBOARD = "/dashboard",
   MAIN = "/",
 }
 

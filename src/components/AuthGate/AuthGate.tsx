@@ -1,9 +1,9 @@
 "use client";
 import { useSession } from "@/hooks/useSession";
+import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
-export function AuthGate({ children }: { children: React.ReactNode }) {
+export function AuthGate({ children }: { children: ReactNode }) {
   const { data: session, isLoading } = useSession();
   const router = useRouter();
 

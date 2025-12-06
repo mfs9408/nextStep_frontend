@@ -1,4 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import { refreshSession } from "@/api/auth";
+import { Route } from "@/enums/route";
 
 export const apiClient = axios.create({
   baseURL: process.env.baseURL,
@@ -42,13 +44,13 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // await refresh();
+        await refreshSession();
         isRefreshing = false;
         onRefreshed();
         return apiClient(originalRequest);
       } catch (refreshError) {
         isRefreshing = false;
-        // redirectToLogin();
+        redirectToLogin();
 
         return Promise.reject(refreshError);
       }
@@ -58,16 +60,16 @@ apiClient.interceptors.response.use(
   },
 );
 
-// export const redirectToLogin = () => {
-//   if (typeof window !== "undefined") {
-//     const currentPath = window.location.pathname;
-//
-//     const isAdminRoute = currentPath.startsWith("/admin");
-//
-//     const redirectUrl = isAdminRoute ? AdminRoute.MAIN : Route.SIGNIN;
-//
-//     window.location.href = redirectUrl;
-//   }
-// };
+export const redirectToLogin = () => {
+  if (typeof window !== "undefined") {
+    // const currentPath = window.location.pathname;
+
+    // const isAdminRoute = currentPath.startsWith("/admin");
+
+    // const redirectUrl = isAdminRoute ? AdminRoute.MAIN : Route.SIGNIN;
+
+    window.location.href = Route.LOGIN;
+  }
+};
 
 export const { get, post, patch, delete: destroy } = apiClient;
