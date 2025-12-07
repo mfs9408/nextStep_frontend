@@ -13,7 +13,6 @@ const AuthGate = ({ children }: { children: ReactNode }) => {
     if (!user) router.replace(Route.LOGIN);
   }, [isLoading, user]);
 
-  if (isLoading || !user) return null;
 
   return <>{children}</>;
 };

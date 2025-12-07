@@ -4,21 +4,13 @@ import {
   SidebarGroup,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import TemplateUserBlock from "@/components/Template/TemplateUserBlock";
 import { usePathname, useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SessionUser } from "@/types/session";
-import { cn } from "@/lib/utils";
 import React from "react";
-import TemplateUserBlock from "@/components/Template/TemplateUserBlock";
-import TemplateHeaderMenu from "@/components/Template/TemplateHeaderMenu";
 
 interface SidebarProps {
   userData: SessionUser | undefined;
@@ -34,16 +26,10 @@ const Sidebar = ({ userData }: SidebarProps) => {
         <SidebarMenu>
           <SidebarMenuItem>
             {userData ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger className="w-full cursor-pointer">
-                  <TemplateUserBlock userData={userData} />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width] min-w-56">
-                  {/*<TemplateHeaderMenu />*/}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <TemplateUserBlock userData={userData} />
             ) : (
-              <div>
+              <div className="flex gap-x-2 items-center">
+                <Skeleton className="h-8 !w-10 w-full  rounded-full" />
                 <Skeleton className="h-11 w-full" />
               </div>
             )}

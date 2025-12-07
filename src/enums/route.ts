@@ -2,7 +2,8 @@ export enum Route {
   LOGIN = "/login",
   REGISTER = "/register",
   DASHBOARD = "/dashboard",
-  LOGOUT = "logout",
+  LOGOUT = "/logout",
+  SETTINGS = "/settings",
   MAIN = "/",
 }
 

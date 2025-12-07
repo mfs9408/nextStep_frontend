@@ -1,16 +1,14 @@
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { Route } from "@/variables/routes";
 import { useRouter } from "next/navigation";
-import { logOut } from "@/api/auth";
-import { toast } from "sonner";
 import React from "react";
+import { Route } from "@/enums/route";
 
 const TemplateHeaderMenu = () => {
   const router = useRouter();
 
   const onLogoutClick = async () => {
-    await logOut().catch(() => toast.error("Something went wrong"));
-    router.push("/");
+    // await logout().catch(() => toast.error("Something went wrong"));
+    router.push(Route.LOGIN);
   };
 
   return (
