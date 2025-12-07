@@ -1,12 +1,18 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthGate } from "@/components/AuthGate/AuthGate";
+import { SessionProvider } from "@/components/SessionProvider";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import AuthGate from "@/components/AuthGate";
 import { PropsWithChildren } from "react";
 
 const queryClient = new QueryClient();
 
 const Providers = ({ children }: PropsWithChildren) => (
   <QueryClientProvider client={queryClient}>
-    <AuthGate>{children}</AuthGate>
+    <SessionProvider>
+      <AuthGate>
+        <SidebarProvider>{children}</SidebarProvider>
+      </AuthGate>
+    </SessionProvider>
   </QueryClientProvider>
 );
 

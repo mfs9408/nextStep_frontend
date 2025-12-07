@@ -44,6 +44,7 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
+        console.log("here refresh session");
         await refreshSession();
         isRefreshing = false;
         onRefreshed();

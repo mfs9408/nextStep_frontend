@@ -1,18 +1,21 @@
 "use client";
-import { useSession } from "@/hooks/useSession";
+import { useSessionContext } from "@/components/SessionProvider";
 import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Route } from "@/enums/route";
 
-export function AuthGate({ children }: { children: ReactNode }) {
-  const { data: session, isLoading } = useSession();
+const AuthGate = ({ children }: { children: ReactNode }) => {
+  const { user, isLoading } = useSessionContext();
   const router = useRouter();
 
   useEffect(() => {
     if (isLoading) return;
-    if (!session) router.replace("/login");
-  }, [isLoading, session]);
+    if (!user) router.replace(Route.LOGIN);
+  }, [isLoading, user]);
 
-  if (isLoading || !session) return null;
+  if (isLoading || !user) return null;
 
   return <>{children}</>;
-}
+};
+
+export default AuthGate;
