@@ -3,7 +3,7 @@ import { refreshSession } from "@/api/auth";
 import { Route } from "@/enums/route";
 
 export const apiClient = axios.create({
-  baseURL: process.env.baseURL,
+  baseURL: "/api",
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
 });

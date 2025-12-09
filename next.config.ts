@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
       throw new Error("NEXT_PUBLIC_BACKEND_DOMAIN is not defined");
     }
 
-    return [{ source: "/:path*", destination: `${backend}/:path*` }];
+    return [{ source: "/api/:path*", destination: `${backend}/:path*` }];
   },
 };
 

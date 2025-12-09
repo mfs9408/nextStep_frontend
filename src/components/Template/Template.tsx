@@ -5,7 +5,7 @@ import Sidebar from "@/components/Sidebar";
 import { cn } from "@/lib/utils";
 
 const Template = ({ children }: PropsWithChildren) => {
-  const { data: session, isLoading } = useSession();
+  const { data: session } = useSession();
 
   return (
     <>
