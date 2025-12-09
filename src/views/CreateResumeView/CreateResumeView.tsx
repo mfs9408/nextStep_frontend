@@ -12,7 +12,6 @@ interface CreateResumeViewProps {
 const CreateResumeView = ({}: CreateResumeViewProps) => {
   const [activeBlock, setActiveBlock] = useState<Blocks>("Heading");
 
-
   return (
     <form
       className="flex flex-col flex-1 gap-y-5 min-h-0 w-full"
