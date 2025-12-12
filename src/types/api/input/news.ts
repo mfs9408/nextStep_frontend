@@ -5,4 +5,5 @@ export interface News {
   publishedAt: Date;
   isPublished: boolean;
   isRead: boolean;
+  badge: string;
 }
