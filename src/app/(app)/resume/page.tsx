@@ -6,6 +6,10 @@ import React from "react";
 const Page = () => {
   const { user } = useSessionContext();
 
+  if (!user) {
+    return;
+  }
+
   return <CreateResumeView user={user} />;
 };
 

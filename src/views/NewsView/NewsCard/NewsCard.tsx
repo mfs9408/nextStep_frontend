@@ -16,7 +16,6 @@ const NewsCard = ({ item }: NewsCardProps) => {
   const markAsReadMutation = useMutation({
     mutationFn: (id: string) => markAsRead(id),
     onSuccess: (_, id) => {
-      // аккуратно обновляем кэш NEWS
       queryClient.setQueryData<News[]>([QueryKey.NEWS], (old) => {
         if (!old) return old;
         return old.map((item) =>

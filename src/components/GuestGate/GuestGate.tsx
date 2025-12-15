@@ -11,7 +11,7 @@ const GuestGate = ({ children }: PropsWithChildren) => {
 
     const check = async () => {
       try {
-        const user = await axios.get(`/user/me`);
+        const user = await axios.get("/user/me");
         if (!cancelled && user) {
           router.replace(Route.DASHBOARD);
         }

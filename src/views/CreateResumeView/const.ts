@@ -1,7 +1,7 @@
 import { Blocks } from "@/types/ResumeTypes";
 
 export const BLOCKS: Blocks[] = [
-  "Heading",
+  "Profile",
   "Summary",
   "Professional experience",
   "Education",

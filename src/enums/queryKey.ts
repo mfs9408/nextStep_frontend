@@ -1,3 +1,4 @@
 export enum QueryKey {
-  NEWS = 'news',
+  NEWS = "news",
+  GET_RESUME = "get_resume",
 }

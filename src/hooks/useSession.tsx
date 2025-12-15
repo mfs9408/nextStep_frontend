@@ -24,7 +24,7 @@ export function useSession() {
 
   const updateMe = useMutation({
     mutationFn: async (data: Partial<NonNullable<SessionUser>>) =>
-      (await patch("/user/me", data)).data,
+      (await patch("/user/me", data)).data, // TODO fix
     onSuccess: (data) => {
       qc.setQueryData<SessionUser>(["me"], (prev) =>
         prev ? { ...prev, ...data } : prev,
