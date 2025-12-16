@@ -1,7 +1,10 @@
+import { PROFILE_FIELDS } from "@/views/CreateResumeView/const";
+import { Blocks, ResumeInterface } from "@/types/ResumeTypes";
+import { createResume, updateResume } from "@/api/resume";
 import { useForm, UseFormReturn } from "react-hook-form";
-import { ResumeInterface } from "@/types/ResumeTypes";
+import { SetStateActionType } from "@/types/general";
 import { AuthenticatedUser } from "@/types/session";
-import { createResume } from "@/api/resume";
+import { useState } from "react";
 import { toast } from "sonner";
 
 interface useCreateResumeHook {
@@ -10,14 +13,18 @@ interface useCreateResumeHook {
 }
 
 interface UseCreateResumeHookReturn {
+  activeBlock: Blocks;
+  setActiveBlock: SetStateActionType<Blocks>;
   formMethods: UseFormReturn<ResumeInterface>;
   onSubmit: (data: ResumeInterface) => void;
+  validateCurrentBlockData: () => Promise<boolean>;
 }
 
 const useCreateResumeHook = ({
   userData,
   resumeData,
 }: useCreateResumeHook): UseCreateResumeHookReturn => {
+  const [activeBlock, setActiveBlock] = useState<Blocks>("Profile");
   const formMethods = useForm<ResumeInterface>({
     defaultValues: {
       userId: userData.id,
@@ -25,7 +32,7 @@ const useCreateResumeHook = ({
       lastName: userData.lastName,
       phone: userData.phone,
       contactEmail: userData.email,
-      resumeTitle: userData.primaryRole || '',
+      resumeTitle: userData.primaryRole || "",
       city: "",
       linkedinUrl: "",
       portfolioUrl: "",
@@ -38,18 +45,37 @@ const useCreateResumeHook = ({
     },
   });
 
-  const onSubmit = async (data: ResumeInterface) => {
-    // await createResume(data)
-    //   .then(() => {
-    //     toast.success("Resume created successfully");
-    //   })
-    //   .catch((err) => {
-    //     toast.error(err.message);
-    //     console.log(err);
-    //   });
+  const validateCurrentBlockData = async () => {
+    const isValidated = formMethods.trigger(PROFILE_FIELDS);
+
+    return isValidated;
   };
 
-  return { formMethods, onSubmit };
+  const onSubmit = async (data: ResumeInterface) => {
+    if (!data.id) {
+      await createResume(data)
+        .then((data) => {
+          formMethods.setValue("id", data.id);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+
+      return;
+    }
+
+    await updateResume(data).catch((err) => {
+      toast.error(err.message);
+    });
+  };
+
+  return {
+    activeBlock,
+    setActiveBlock,
+    formMethods,
+    onSubmit,
+    validateCurrentBlockData,
+  };
 };
 
 export default useCreateResumeHook;

@@ -2,30 +2,45 @@ import SummarySection from "@/components/ResumeBlocks/SummarySection";
 import ProfileSection from "@/components/ResumeBlocks/ProfileSection";
 import ResumeLeftSide from "@/views/CreateResumeView/ResumeLeftSide";
 import ResumePageSwitcher from "@/components/ResumePageSwitcher";
+import { useAutosaveResumeBlock } from "@/hooks/useAutosaveHook";
+import { PROFILE_FIELDS } from "@/views/CreateResumeView/const";
 import useCreateResumeHook from "@/hooks/useCreateResumeHook";
-import { Blocks, ResumeInterface } from "@/types/ResumeTypes";
+import { ResumeInterface } from "@/types/ResumeTypes";
 import { AuthenticatedUser } from "@/types/session";
 import { UseFormReturn } from "react-hook-form";
 import { Card } from "@/components/ui/card";
-import React, { useState } from "react";
 import { cn } from "@/lib/utils";
+import React from "react";
 
-interface CommonSectionProps {
-  formMethods: UseFormReturn<ResumeInterface>;
-}
+// interface CommonSectionProps {
+//   formMethods: UseFormReturn<ResumeInterface>;
+// }
 
 interface CreateResumeViewProps {
   user: AuthenticatedUser;
   resumeData?: ResumeInterface;
 }
 
+const FIELDS_BY_BLOCK = {
+  Profile: PROFILE_FIELDS,
+} satisfies Record<string, readonly (keyof ResumeInterface)[]>;
+
 const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
-  const [activeBlock, setActiveBlock] = useState<Blocks>("Profile");
-  const { formMethods, onSubmit } = useCreateResumeHook({
-    userData: user,
-    resumeData,
-  });
+  const { activeBlock, setActiveBlock, formMethods, onSubmit } =
+    useCreateResumeHook({
+      userData: user,
+      resumeData,
+    });
   const { handleSubmit } = formMethods;
+
+  const { autosaveStatus } = useAutosaveResumeBlock({
+    formMethods,
+    activeBlock,
+    fieldsByBlock: FIELDS_BY_BLOCK,
+    onSubmit,
+    debounceMs: 900,
+    enabled: true,
+  });
 
   return (
     <form
@@ -36,6 +51,7 @@ const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
       <Card className="flex flex-1 flex-row min-h-0 w-full p-8">
         <div className={cn("lg:flex h-full w-1/5 border-r", "hidden")}>
           <ResumeLeftSide
+            autosaveStatus={autosaveStatus}
             activeBlock={activeBlock}
             setActiveBlock={setActiveBlock}
           />
