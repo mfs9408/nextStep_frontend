@@ -20,3 +20,36 @@ export const getResume = async (id: string): Promise<ResumeInterface> => {
 
   return response.data;
 };
+
+export const updateProfile = async (
+  id: string,
+  payload: Partial<ResumeInterface>,
+) => {
+  console.log("updateProfile", payload);
+};
+export const updateSummary = async (
+  id: string,
+  payload: Partial<ResumeInterface>,
+) => {
+  console.log("updateSummary", payload);
+};
+export const updateProfessionalExperience = async (
+  id: string,
+  payload: Partial<ResumeInterface>,
+) => {
+  console.log("professionalExperience", payload);
+};
+
+export const updateEducation = async (
+  id: string,
+  payload: Partial<ResumeInterface>,
+) => {
+  console.log("updateSummary", payload);
+};
+
+export const updateSkills = async (
+  id: string,
+  payload: Partial<ResumeInterface>,
+) => {
+  console.log("updateSummary", payload);
+};

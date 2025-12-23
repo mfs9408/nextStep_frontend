@@ -1,4 +1,12 @@
-import type { ResumeInterface } from "@/types/ResumeTypes";
+import {
+  createResume,
+  updateEducation,
+  updateProfessionalExperience,
+  updateProfile,
+  updateSkills,
+  updateSummary,
+} from "@/api/resume";
+import type { Blocks, ResumeInterface } from "@/types/ResumeTypes";
 import type { UseFormReturn } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -7,11 +15,29 @@ type AutosaveStatus = "idle" | "saving" | "saved" | "error";
 
 type Props = {
   formMethods: UseFormReturn<ResumeInterface>;
-  activeBlock: string;
+  activeBlock: Blocks;
   fieldsByBlock: Record<string, readonly (keyof ResumeInterface)[]>;
   onSubmit: (data: ResumeInterface) => Promise<void> | void;
   debounceMs?: number;
   enabled?: boolean;
+};
+
+function pick<T extends object, K extends keyof T>(obj: T, keys: readonly K[]) {
+  const out = {} as Pick<T, K>;
+  for (const k of keys) out[k] = obj[k];
+  return out;
+}
+
+const saveByBlock: Record<
+  Blocks,
+  (id: string, payload: Partial<ResumeInterface>) => Promise<void>
+> = {
+  Profile: (id, payload) => updateProfile(id, payload),
+  Summary: (id, payload) => updateSummary(id, payload),
+  "Professional experience": (id, payload) =>
+    updateProfessionalExperience(id, payload),
+  Skills: (id, payload) => updateSkills(id, payload),
+  Education: (id, payload) => updateEducation(id, payload),
 };
 
 export const useAutosaveResumeBlock = ({
@@ -23,59 +49,6 @@ export const useAutosaveResumeBlock = ({
   enabled = true,
 }: Props) => {
   const [status, setStatus] = useState<AutosaveStatus>("idle");
-
-  const timerRef = useRef<number | null>(null);
-  const lastSavedHashRef = useRef<string>("");
-
-  const fields = fieldsByBlock[activeBlock] ?? [];
-
-  useEffect(() => {
-    if (!enabled) return;
-    if (!fields.length) return;
-
-    const subscription = formMethods.watch(() => {
-      if (!formMethods.formState.isDirty) return;
-
-      const values = formMethods.getValues(fields);
-
-      const hash = JSON.stringify(values);
-      if (hash === lastSavedHashRef.current) return;
-
-      if (timerRef.current) window.clearTimeout(timerRef.current);
-
-      timerRef.current = window.setTimeout(async () => {
-        try {
-          setStatus("saving");
-
-          const ok = await formMethods.trigger(fields as any);
-          if (!ok) {
-            setStatus("idle");
-            return;
-          }
-
-          const full = formMethods.getValues();
-
-          await Promise.resolve(onSubmit(full));
-
-          lastSavedHashRef.current = hash;
-          setStatus("saved");
-
-          formMethods.reset(formMethods.getValues(), { keepValues: true });
-
-          window.setTimeout(() => setStatus("idle"), 1200);
-        } catch (err: unknown) {
-          setStatus("error");
-          toast.error("Autosave failed");
-        }
-      }, debounceMs);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-      if (timerRef.current) window.clearTimeout(timerRef.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled, activeBlock, debounceMs]);
 
   return { autosaveStatus: status };
 };

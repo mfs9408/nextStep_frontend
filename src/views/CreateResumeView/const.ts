@@ -19,3 +19,5 @@ export const PROFILE_FIELDS = [
   "portfolioUrl",
   "linkedinUrl",
 ] as const;
+
+export const SUMMARY_FIELDS = ["summary"] as const;

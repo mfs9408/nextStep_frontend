@@ -40,6 +40,10 @@ const useCreateResumeHook = ({
       needsSponsorship: false,
       isPublic: false,
       status: "DRAFT",
+      summary: {
+        content: "",
+      },
+      summaryBullets: [],
       ...resumeData,
       id: resumeData?.id,
     },
@@ -63,6 +67,8 @@ const useCreateResumeHook = ({
 
       return;
     }
+
+    console.log("update");
 
     await updateResume(data).catch((err) => {
       toast.error(err.message);

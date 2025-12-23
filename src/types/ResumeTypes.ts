@@ -24,6 +24,16 @@ export interface ResumeInterface {
   needsSponsorship: false;
   status: STATUS;
   isPublic: boolean;
+
+  summary: {
+    id?: string;
+    content: string;
+  };
+  summaryBullets: {
+    id?: string;
+    content: string;
+    order: number;
+  }[];
 }
 
 export interface CommonSectionProps {

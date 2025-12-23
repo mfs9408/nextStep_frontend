@@ -1,9 +1,9 @@
+import { PROFILE_FIELDS, SUMMARY_FIELDS } from "@/views/CreateResumeView/const";
 import SummarySection from "@/components/ResumeBlocks/SummarySection";
 import ProfileSection from "@/components/ResumeBlocks/ProfileSection";
 import ResumeLeftSide from "@/views/CreateResumeView/ResumeLeftSide";
 import ResumePageSwitcher from "@/components/ResumePageSwitcher";
 import { useAutosaveResumeBlock } from "@/hooks/useAutosaveHook";
-import { PROFILE_FIELDS } from "@/views/CreateResumeView/const";
 import useCreateResumeHook from "@/hooks/useCreateResumeHook";
 import { ResumeInterface } from "@/types/ResumeTypes";
 import { AuthenticatedUser } from "@/types/session";
@@ -23,6 +23,7 @@ interface CreateResumeViewProps {
 
 const FIELDS_BY_BLOCK = {
   Profile: PROFILE_FIELDS,
+  Summary: SUMMARY_FIELDS,
 } satisfies Record<string, readonly (keyof ResumeInterface)[]>;
 
 const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
@@ -31,6 +32,7 @@ const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
       userData: user,
       resumeData,
     });
+
   const { handleSubmit } = formMethods;
 
   const { autosaveStatus } = useAutosaveResumeBlock({
@@ -61,7 +63,9 @@ const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
             {activeBlock === "Profile" && (
               <ProfileSection formMethods={formMethods} />
             )}
-            {activeBlock === "Summary" && <SummarySection />}
+            {activeBlock === "Summary" && (
+              <SummarySection formMethods={formMethods} />
+            )}
           </div>
           <ResumePageSwitcher
             activeBlock={activeBlock}
