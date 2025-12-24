@@ -1,6 +1,7 @@
 "use client";
 import YourResumesView from "@/views/YourResumesView";
 import { ResumeInterface } from "@/types/ResumeTypes";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
 import { getAllResumes } from "@/api/resume";
 import { QueryKey } from "@/enums/queryKey";
@@ -9,13 +10,13 @@ import { Sort } from "@/enums/sort";
 
 const Page = () => {
   const [sort, setSort] = useState<Sort>(Sort.ASC);
-  const { data: resumes, isLoading } = useQuery<ResumeInterface[]>({
-    queryKey: [QueryKey.ALL_RESUMES, sort],
-    queryFn: () => getAllResumes(sort),
-    initialData: [],
-  });
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search.trim(), 400);
 
-  console.log({ isLoading });
+  const { data: resumes, isLoading } = useQuery<ResumeInterface[]>({
+    queryKey: [QueryKey.ALL_RESUMES, sort, debouncedSearch],
+    queryFn: () => getAllResumes(sort, debouncedSearch),
+  });
 
   return (
     <YourResumesView
@@ -23,6 +24,8 @@ const Page = () => {
       isLoading={isLoading}
       sort={sort}
       setSort={setSort}
+      search={search}
+      setSearch={setSearch}
     />
   );
 };

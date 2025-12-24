@@ -33,12 +33,12 @@ const Select = ({
 }: SelectProps) => {
   return (
     <ShadcnSelect value={selectedItem} onValueChange={setSelectedValue}>
-      <SelectTrigger className={cn(className, "cursor-pointer min-w-10!")}>
+      <SelectTrigger className={cn(className, "cursor-pointer min-w-10")}>
         <SelectValue placeholder={label} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>{placeholder}</SelectLabel>
+          {placeholder && <SelectLabel>{placeholder}</SelectLabel>}
           {selectGroup.map(({ value, label }) => (
             <SelectItem key={value} value={value} className="cursor-pointer">
               {label}

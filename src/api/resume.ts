@@ -23,10 +23,12 @@ export const getResume = async (id: string): Promise<ResumeFormInterface> => {
 
 export const getAllResumes = async (
   order: string,
+  query?: string,
 ): Promise<ResumeInterface[]> => {
   const response = await get(`/resume/all`, {
     params: {
       order: order,
+      q: query && query,
     },
   });
 
