@@ -1,5 +1,8 @@
+import {
+  Blocks,
+  ResumeFormInterface,
+} from "@/types/ResumeTypes";
 import { PROFILE_FIELDS } from "@/views/CreateResumeView/const";
-import { Blocks, ResumeInterface } from "@/types/ResumeTypes";
 import { createResume, updateResume } from "@/api/resume";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { SetStateActionType } from "@/types/general";
@@ -9,14 +12,14 @@ import { toast } from "sonner";
 
 interface useCreateResumeHook {
   userData: AuthenticatedUser;
-  resumeData?: ResumeInterface;
+  resumeData?: ResumeFormInterface;
 }
 
 interface UseCreateResumeHookReturn {
   activeBlock: Blocks;
   setActiveBlock: SetStateActionType<Blocks>;
-  formMethods: UseFormReturn<ResumeInterface>;
-  onSubmit: (data: ResumeInterface) => void;
+  formMethods: UseFormReturn<ResumeFormInterface>;
+  onSubmit: (data: ResumeFormInterface) => void;
   validateCurrentBlockData: () => Promise<boolean>;
 }
 
@@ -25,7 +28,7 @@ const useCreateResumeHook = ({
   resumeData,
 }: useCreateResumeHook): UseCreateResumeHookReturn => {
   const [activeBlock, setActiveBlock] = useState<Blocks>("Profile");
-  const formMethods = useForm<ResumeInterface>({
+  const formMethods = useForm<ResumeFormInterface>({
     defaultValues: {
       userId: userData.id,
       firstName: userData.firstName,
@@ -55,7 +58,7 @@ const useCreateResumeHook = ({
     return isValidated;
   };
 
-  const onSubmit = async (data: ResumeInterface) => {
+  const onSubmit = async (data: ResumeFormInterface) => {
     if (!data.id) {
       await createResume(data)
         .then((data) => {

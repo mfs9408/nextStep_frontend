@@ -9,7 +9,7 @@ export type Blocks =
 
 export type STATUS = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
-export interface ResumeInterface {
+export interface ResumeFormInterface {
   id?: string;
   userId: string;
   note: string;
@@ -36,6 +36,11 @@ export interface ResumeInterface {
   }[];
 }
 
+export interface ResumeInterface extends ResumeFormInterface {
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface CommonSectionProps {
-  formMethods: UseFormReturn<ResumeInterface>;
+  formMethods: UseFormReturn<ResumeFormInterface>;
 }

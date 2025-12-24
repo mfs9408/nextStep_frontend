@@ -1,4 +1,9 @@
-import { BookUser, LayoutDashboard, Newspaper } from "lucide-react";
+import {
+  BookUser,
+  LayoutDashboard,
+  Newspaper,
+  UserRoundPen,
+} from "lucide-react";
 
 export enum Route {
   LOGIN = "/login",
@@ -7,14 +12,17 @@ export enum Route {
   LOGOUT = "/logout",
   SETTINGS = "/settings",
   CREATE_RESUME = "/resume",
+  YOUR_RESUMES = "/your-resumes",
+  // CONVERTED_RESUMES = "/converted-resumes",
   NEWS = "/news",
-  MAIN = "/",
+  // MAIN = "/",
 }
 
 export enum RouteName {
   DASHBOARD = "Dashboard",
   NEWS = "News",
   SETTINGS = "Settings",
+  YOUR_RESUMES = "Your resumes",
   CREATE_RESUME = "Create resume",
 }
 
@@ -37,11 +45,11 @@ export const APPLICATION_ROUTES = [
         route: Route.CREATE_RESUME,
         icon: BookUser,
       },
-      // {
-      //   routeName: RouteName.CONVERTED_RESUMES,
-      //   route: Route.CONVERTED_RESUMES,
-      //   icon: UserRoundPen,
-      // },
+      {
+        routeName: RouteName.YOUR_RESUMES,
+        route: Route.YOUR_RESUMES,
+        icon: UserRoundPen,
+      },
       // {
       //   routeName: RouteName.EXPERIENCE_TEMPLATES,
       //   route: Route.EXPERIENCE_TEMPLATES,

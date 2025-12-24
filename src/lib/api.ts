@@ -63,11 +63,11 @@ apiClient.interceptors.response.use(
 
 export const redirectToLogin = () => {
   if (typeof window !== "undefined") {
-    // const currentPath = window.location.pathname;
+    // commonConst currentPath = window.location.pathname;
 
-    // const isAdminRoute = currentPath.startsWith("/admin");
+    // commonConst isAdminRoute = currentPath.startsWith("/admin");
 
-    // const redirectUrl = isAdminRoute ? AdminRoute.MAIN : Route.SIGNIN;
+    // commonConst redirectUrl = isAdminRoute ? AdminRoute.MAIN : Route.SIGNIN;
 
     window.location.href = Route.LOGIN;
   }
