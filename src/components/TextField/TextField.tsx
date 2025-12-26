@@ -21,6 +21,7 @@ const TextField = ({
   leftIcon,
   rightIcon,
   type = "text",
+  onBlur,
   ...props
 }: TextFieldProps) => {
   const [focused, setFocused] = useState(false);
@@ -53,7 +54,8 @@ const TextField = ({
           onFocus={() => {
             !disabled && setFocused(true);
           }}
-          onBlur={() => {
+          onBlur={(event) => {
+            onBlur && onBlur(event);
             !disabled && setFocused(false);
           }}
           className={cn(
@@ -80,7 +82,7 @@ const TextField = ({
               leftIcon ? "left-8" : "left-2",
               focused || props.value
                 ? "text-xs top-0 left-2 w-auto -translate-y-1/2"
-                : "text-sm top-1/2 text-muted-foreground -translate-y-1/2 w-[80%]",
+                : "text-sm top-1/2 text-muted-foreground -translate-y-1/2 w-[90%]",
               focused ? "text-chart-1" : "text-muted-foreground",
               disabled && "cursor-not-allowed",
               errorMessage && "text-destructive",

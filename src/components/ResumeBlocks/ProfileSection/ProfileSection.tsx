@@ -38,7 +38,7 @@ export default function ProfileSection({
                   label="Resume title"
                   placeholder="Frontend developer"
                   containerClassName="w-full"
-                  error={error?.message}
+                  errorMessage={error?.message}
                 />
               )}
             />
@@ -52,7 +52,7 @@ export default function ProfileSection({
                   label="Resume note"
                   placeholder="Resume for designer position from 05/01 for Catflix"
                   containerClassName="w-full"
-                  error={error?.message}
+                  errorMessage={error?.message}
                 />
               )}
             />
@@ -78,7 +78,7 @@ export default function ProfileSection({
                   label="First name"
                   placeholder="John"
                   containerClassName="w-full"
-                  error={error?.message}
+                  errorMessage={error?.message}
                 />
               )}
             />
@@ -92,7 +92,7 @@ export default function ProfileSection({
                   label="Last name"
                   placeholder="Doe"
                   containerClassName="w-full"
-                  error={error?.message}
+                  errorMessage={error?.message}
                 />
               )}
             />
@@ -106,7 +106,7 @@ export default function ProfileSection({
                   label="Email"
                   placeholder="john_doe@gmail.com"
                   containerClassName="w-full"
-                  error={error?.message}
+                  errorMessage={error?.message}
                 />
               )}
             />
@@ -120,7 +120,7 @@ export default function ProfileSection({
                   label="Phone"
                   placeholder="347 123 4567"
                   containerClassName="w-full"
-                  error={error?.message}
+                  errorMessage={error?.message}
                 />
               )}
             />
@@ -134,7 +134,7 @@ export default function ProfileSection({
                   label="City"
                   placeholder="New York"
                   containerClassName="w-full"
-                  error={error?.message}
+                  errorMessage={error?.message}
                 />
               )}
             />
@@ -158,7 +158,7 @@ export default function ProfileSection({
                   label="Portfolio"
                   placeholder="https://catflix.com"
                   containerClassName="w-full"
-                  error={error?.message}
+                  errorMessage={error?.message}
                 />
               )}
             />
@@ -171,7 +171,7 @@ export default function ProfileSection({
                   label="LinkedIn"
                   placeholder="https://linkedin.com/in/john-doe"
                   containerClassName="w-full"
-                  error={error?.message}
+                  errorMessage={error?.message}
                 />
               )}
             />
