@@ -48,8 +48,8 @@ const Select = ({
   };
 
   return (
-    <div className={cn("w-full", containerClassName)}>
-      <div className={cn("relative w-full")}>
+    <div className={cn("w-full h-9", containerClassName)}>
+      <div className={cn("relative w-full ")}>
         {label && (
           <label
             htmlFor={label}

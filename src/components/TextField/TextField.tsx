@@ -59,7 +59,7 @@ const TextField = ({
             !disabled && setFocused(false);
           }}
           className={cn(
-            "peer flex-1 bg-transparent text-sm outline-none p-3 transition-all placeholder:text-muted-foreground border-none",
+            "h-8.5 peer flex-1 bg-transparent text-sm outline-none p-3 transition-all placeholder:text-muted-foreground border-none",
             leftIcon ? "pl-8" : "pl-3",
             rightIcon ? "pr-10" : "pr-3",
             disabled && "cursor-not-allowed opacity-50",
@@ -81,7 +81,7 @@ const TextField = ({
               "absolute left-2 px-1 font-medium text-xs transition-all bg-primary-foreground cursor-text",
               leftIcon ? "left-8" : "left-2",
               focused || props.value
-                ? "text-xs top-0 left-2 w-auto -translate-y-1/2"
+                ? "text-xs -top-0.5 left-2 w-auto -translate-y-1/2"
                 : "text-sm top-1/2 text-muted-foreground -translate-y-1/2 w-[90%]",
               focused ? "text-chart-1" : "text-muted-foreground",
               disabled && "cursor-not-allowed",

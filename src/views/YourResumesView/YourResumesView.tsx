@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import TextField from "@/components/TextField";
 import { Card } from "@/components/ui/card";
 import { DownloadIcon } from "lucide-react";
-import { refreshSession } from "@/api/auth";
 import Select from "@/components/Select";
 import { formatDate } from "@/lib/utils";
 import { Route } from "@/enums/route";
@@ -35,7 +34,6 @@ const YourResumesView = ({
 }: YourResumesViewProps) => {
   return (
     <div className="flex min-h-0 w-full flex-1 flex-col gap-y-4">
-      <Button onClick={refreshSession}>foo</Button>
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
@@ -63,6 +61,7 @@ const YourResumesView = ({
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             label="Search by note"
+            placeholder="Resumes for Amazon"
             containerClassName="w-1/5"
           />
         </div>
