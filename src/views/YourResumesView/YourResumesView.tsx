@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button";
 import TextField from "@/components/TextField";
 import { Card } from "@/components/ui/card";
 import { DownloadIcon } from "lucide-react";
+import Select from "@/components/Select";
 import { formatDate } from "@/lib/utils";
 import { Route } from "@/enums/route";
 import { Sort } from "@/enums/sort";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import React from "react";
 
@@ -23,11 +23,6 @@ interface YourResumesViewProps {
   search: string;
   setSearch: SetStateActionType<string>;
 }
-
-const SortSelect = dynamic(() => import("@/components/Select"), {
-  ssr: false,
-  loading: () => <div className="h-9 w-[180px] rounded-md bg-muted" />,
-});
 
 const YourResumesView = ({
   resumes,
@@ -55,16 +50,17 @@ const YourResumesView = ({
 
       <Card className="min-h-0 w-full flex-1 overflow-auto p-4 md:p-6">
         <div className="flex flex-row gap-x-4">
-          <SortSelect
-            selectedItem={sort as string}
-            setSelectedValue={(value) => setSort(value as Sort)}
+          <Select
+            label="Sort by"
+            value={sort}
+            onChange={(value) => setSort(value as Sort)}
             selectGroup={SORT_OPTIONS}
-            className="bg-card"
+            containerClassName="bg-card w-50"
           />
           <TextField
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search by note"
+            label="Search by note"
             containerClassName="w-1/5"
           />
         </div>
@@ -73,7 +69,7 @@ const YourResumesView = ({
           <ResumesSkeleton />
         ) : resumes !== undefined && resumes.length === 0 ? (
           <div className="flex flex-col items-start justify-center rounded-xl border border-dashed bg-card p-10">
-            <p className="text-base font-medium">No resumes yet</p>
+            <p className="text-base font-medium">No resume yet</p>
             <p className="mt-1 text-sm text-muted-foreground">
               Create your first resume to start editing sections and generating
               AI improvements.
