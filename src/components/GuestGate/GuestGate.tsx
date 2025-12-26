@@ -11,7 +11,11 @@ const GuestGate = ({ children }: PropsWithChildren) => {
 
     const check = async () => {
       try {
-        const user = await axios.get("/user/me");
+        const user = await axios.get("/user/me", {
+          baseURL: "/api",
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        });
         if (!cancelled && user) {
           router.replace(Route.DASHBOARD);
         }

@@ -1,6 +1,6 @@
 import React, { InputHTMLAttributes, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff } from "lucide-react"; // optional, if you want eye toggle
+import { Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface PasswordFieldProps extends InputHTMLAttributes<HTMLInputElement> {

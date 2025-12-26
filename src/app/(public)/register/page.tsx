@@ -78,7 +78,7 @@ const Page = () => {
                 <TextField
                   label="Email"
                   {...field}
-                  error={error?.message}
+                  errorMessage={error?.message}
                   disabled={isLoading}
                 />
               )}
@@ -112,7 +112,7 @@ const Page = () => {
                 <TextField
                   label="First Name"
                   {...field}
-                  error={error?.message}
+                  errorMessage={error?.message}
                   disabled={isLoading}
                 />
               )}
@@ -127,7 +127,7 @@ const Page = () => {
                 <TextField
                   label="Last Name"
                   {...field}
-                  error={error?.message}
+                  errorMessage={error?.message}
                   disabled={isLoading}
                 />
               )}
@@ -142,7 +142,7 @@ const Page = () => {
                 <TextField
                   label="Your Primary Role"
                   {...field}
-                  error={error?.message}
+                  errorMessage={error?.message}
                   disabled={isLoading}
                 />
               )}
@@ -157,7 +157,7 @@ const Page = () => {
                 <TextField
                   label="Your Phone Number"
                   {...field}
-                  error={error?.message}
+                  errorMessage={error?.message}
                   disabled={isLoading}
                 />
               )}

@@ -72,7 +72,7 @@ const Page = () => {
                 <TextField
                   label="Email"
                   {...field}
-                  error={error?.message}
+                  errorMessage={error?.message}
                   disabled={isLoading}
                 />
               )}
@@ -84,10 +84,10 @@ const Page = () => {
                 required: "This field is required",
               }}
               render={({ field, fieldState: { error } }) => (
-                <PasswordField
+                <TextField type='password'
                   label="Password"
                   {...field}
-                  error={error?.message}
+                  errorMessage={error?.message}
                   disabled={isLoading}
                 />
               )}

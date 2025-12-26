@@ -13,10 +13,9 @@ export const register = async (
 };
 
 export const refreshSession = async () => {
-  return await axios.post("/auth/session/refresh", {
+  return await axios.get("/auth/session/refresh", {
+    baseURL: "/api",
     withCredentials: true,
-    headers: {
-      "Content-type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
   });
 };
