@@ -44,7 +44,9 @@ const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
       className="flex flex-col flex-1 gap-y-5 min-h-0 w-full"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h1 className="text-2xl">Create resume</h1>
+      <h1 className="text-2xl">
+        {resumeData?.id ? "Update" : "Create"} resume
+      </h1>
       <Card className="flex flex-1 flex-row min-h-0 w-full p-8">
         <div className={cn("lg:flex h-full w-1/5 border-r", "hidden")}>
           <ResumeLeftSide

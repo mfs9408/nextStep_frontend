@@ -9,8 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
 
 interface SelectProps {
   value: string;
@@ -88,13 +88,12 @@ const Select = ({
             <SelectValue
               placeholder={placeholder}
               className={cn(
-                "text-sm font-light data-[placeholder]:text-muted-foreground w-full justify-center",
+                "text-sm font-light data-placeholder:text-muted-foreground w-full justify-center",
               )}
             />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {placeholder && <SelectLabel>{placeholder}</SelectLabel>}
               {selectGroup.map(({ value, label }) => (
                 <SelectItem
                   key={value}

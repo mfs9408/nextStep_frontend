@@ -1,15 +1,16 @@
+import SmallResumeCard from "@/components/SmallResumeCard";
 import ResumesSkeleton from "@/components/ResumesSkeleton";
-import { Separator } from "@/components/ui/separator";
+import { useQueryClient } from "@tanstack/react-query";
 import { ResumeInterface } from "@/types/ResumeTypes";
 import { SetStateActionType } from "@/types/general";
-import StatusBadge from "@/components/StatusBadge";
 import { SORT_OPTIONS } from "@/commonConst/Sort";
 import { Button } from "@/components/ui/button";
 import TextField from "@/components/TextField";
+import { X } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { DownloadIcon } from "lucide-react";
+import { QueryKey } from "@/enums/queryKey";
+import { deleteResume } from "@/api/resume";
 import Select from "@/components/Select";
-import { formatDate } from "@/lib/utils";
 import { Route } from "@/enums/route";
 import { Sort } from "@/enums/sort";
 import Link from "next/link";
@@ -32,6 +33,15 @@ const YourResumesView = ({
   search,
   setSearch,
 }: YourResumesViewProps) => {
+  const queryClient = useQueryClient();
+
+  const onDelete = async (id: string) => {
+    await deleteResume(id);
+    await queryClient.invalidateQueries({
+      queryKey: [QueryKey.ALL_RESUMES],
+    });
+  };
+
   return (
     <div className="flex min-h-0 w-full flex-1 flex-col gap-y-4">
       <div className="flex items-start justify-between gap-4">
@@ -49,9 +59,10 @@ const YourResumesView = ({
       </div>
 
       <Card className="min-h-0 w-full flex-1 overflow-auto p-4 md:p-6">
-        <div className="flex flex-row gap-x-4">
+        <div className="flex flex-row gap-x-4 items-center">
           <Select
             label="Sort by"
+            placeholder="Sort by"
             value={sort}
             onChange={(value) => setSort(value as Sort)}
             selectGroup={SORT_OPTIONS}
@@ -63,7 +74,16 @@ const YourResumesView = ({
             label="Search by note"
             placeholder="Resumes for Amazon"
             containerClassName="w-1/5"
+            rightIcon={
+              <X
+                onClick={() => setSearch("")}
+                className="text-muted-foreground h-4 w-4 cursor-pointer"
+              />
+            }
           />
+          <p className="text-sm text-muted-foreground">
+            {resumes?.length ?? 0} resumes found.{" "}
+          </p>
         </div>
 
         {isLoading ? (
@@ -82,69 +102,14 @@ const YourResumesView = ({
         ) : (
           <div className="space-y-3">
             {Array.isArray(resumes) &&
-              resumes.map((item) => {
-                const title =
-                  item.resumeTitle?.trim() ||
-                  `${item.firstName ?? ""} ${item.lastName ?? ""}`.trim() ||
-                  "Untitled resume";
-
-                return (
-                  <div
-                    key={item.id}
-                    className="rounded-xl border bg-card p-4 transition hover:shadow-sm"
-                  >
-                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h2 className="truncate text-base font-semibold">
-                            {title}
-                          </h2>
-                          <StatusBadge status={item.status} />
-                        </div>
-
-                        <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-                          <span className="truncate">
-                            {item.firstName} {item.lastName}
-                          </span>
-                          <span className="opacity-60">•</span>
-                          <span>Updated {formatDate(item.updatedAt)}</span>
-                        </div>
-                        {item.note ? (
-                          <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">
-                            {item.note}
-                          </p>
-                        ) : (
-                          <p className="mt-3 text-sm text-muted-foreground italic">
-                            No note yet
-                          </p>
-                        )}
-                      </div>
-                      <div className="flex shrink-0 items-center gap-2 md:justify-end">
-                        <Button variant="outline">
-                          <p>Download</p>
-                          <DownloadIcon />
-                        </Button>
-                        <Button asChild variant="secondary" className="border">
-                          <Link href={`/resume/${item.id}`}>Edit</Link>
-                        </Button>
-                        <Button variant="destructive">Delete</Button>
-                      </div>
-                    </div>
-                    <Separator className="my-4" />
-                    <div className="flex text-xs text-muted-foreground">
-                      <span>
-                        City: {item.city}
-                        <span className="font-mono">
-                          {String(item.id).slice(0, 8)}…
-                        </span>
-                      </span>
-                      {/*<span className="text-muted-foreground">*/}
-                      {/*  last edit section*/}
-                      {/*</span>*/}
-                    </div>
-                  </div>
-                );
-              })}
+              resumes !== null &&
+              resumes.map((item) => (
+                <SmallResumeCard
+                  key={item.id}
+                  item={item}
+                  onDelete={onDelete}
+                />
+              ))}
           </div>
         )}
       </Card>

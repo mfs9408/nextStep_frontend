@@ -37,6 +37,7 @@ export interface ResumeFormInterface {
 }
 
 export interface ResumeInterface extends ResumeFormInterface {
+  id: string;
   createdAt: string;
   updatedAt: string;
 }

@@ -1,5 +1,5 @@
 import { ResumeFormInterface, ResumeInterface } from "@/types/ResumeTypes";
-import { get, patch, post } from "@/lib/api";
+import { destroy, get, patch, post } from "@/lib/api";
 
 export const createResume = async (
   body: ResumeFormInterface,
@@ -12,6 +12,11 @@ export const updateResume = async (
   body: ResumeFormInterface,
 ): Promise<ResumeFormInterface> => {
   const response = await patch(`/resume/${body.id}`, body);
+  return response.data;
+};
+
+export const deleteResume = async (id: string) => {
+  const response = await destroy(`/resume/${id}`);
   return response.data;
 };
 
