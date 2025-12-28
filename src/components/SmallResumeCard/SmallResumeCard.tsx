@@ -1,19 +1,20 @@
+import { ResumeToDelete } from "@/views/YourResumesView/your-resumes-type";
 import { Separator } from "@/components/ui/separator";
 import { ResumeInterface } from "@/types/ResumeTypes";
+import { SetStateActionType } from "@/types/general";
 import StatusBadge from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { cn, formatDate } from "@/lib/utils";
 import { DownloadIcon } from "lucide-react";
-import React, { useState } from "react";
 import Link from "next/link";
+import React from "react";
 
 interface SmallResumeCardProps {
   item: ResumeInterface;
-  onDelete: (id: string) => void;
+  setResumeToDelete: SetStateActionType<ResumeToDelete | null>;
 }
 
-const SmallResumeCard = ({ item, onDelete }: SmallResumeCardProps) => {
-  const [isLoading, setIsLoading] = useState(false);
+const SmallResumeCard = ({ item, setResumeToDelete }: SmallResumeCardProps) => {
   const title =
     item.resumeTitle?.trim() ||
     `${item.firstName ?? ""} ${item.lastName ?? ""}`.trim() ||
@@ -24,7 +25,6 @@ const SmallResumeCard = ({ item, onDelete }: SmallResumeCardProps) => {
       key={item.id}
       className={cn(
         "rounded-xl border bg-card p-4 transition hover:bg-muted/30 hover:shadow-sm",
-        isLoading && "opacity-50 cursor-not-allowed",
       )}
     >
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
@@ -52,22 +52,22 @@ const SmallResumeCard = ({ item, onDelete }: SmallResumeCardProps) => {
           )}
         </div>
         <div className="flex shrink-0 items-center gap-2 md:justify-end">
-          <Button asChild disabled={isLoading} size="sm">
+          <Button asChild size="sm">
             <Link href={`/resume/${item.id}`}>Edit</Link>
           </Button>
-          <Button variant="outline" disabled={isLoading} size="sm">
+          <Button variant="outline" size="sm">
             <p>Download</p>
             <DownloadIcon />
           </Button>
           <Button
             size="sm"
             variant="destructive"
-            onClick={async () => {
-              setIsLoading(true);
-              onDelete(item.id);
-              setIsLoading(true);
+            onClick={() => {
+              setResumeToDelete({
+                id: item.id,
+                name: item.resumeTitle || item.note,
+              });
             }}
-            disabled={isLoading}
           >
             Delete
           </Button>

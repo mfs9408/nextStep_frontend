@@ -22,20 +22,20 @@ const SummarySection = ({ formMethods: { control } }: SummarySectionProps) => {
             </p>
           </div>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
-            <Controller
-              name="summary"
-              rules={{ required: "This field is required" }}
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  label="Resume title"
-                  placeholder="Frontend developer"
-                  containerClassName="w-full"
-                  error={error?.message}
-                />
-              )}
-            />
+            {/*<Controller*/}
+            {/*  name="summary"*/}
+            {/*  rules={{ required: "This field is required" }}*/}
+            {/*  control={control}*/}
+            {/*  render={({ field, fieldState: { error } }) => (*/}
+            {/*    <TextField*/}
+            {/*      {...field}*/}
+            {/*      label="Resume title"*/}
+            {/*      placeholder="Frontend developer"*/}
+            {/*      containerClassName="w-full"*/}
+            {/*      errorMessage={error?.message}*/}
+            {/*    />*/}
+            {/*  )}*/}
+            {/*/>*/}
             {/*<Controller*/}
             {/*  name="summary"*/}
             {/*  rules={{*/}
