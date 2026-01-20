@@ -1,4 +1,9 @@
-import { ResumeFormInterface, ResumeInterface } from "@/types/ResumeTypes";
+import {
+  ProfileSection,
+  ResumeFormInterface,
+  ResumeInterface,
+} from "@/types/ResumeTypes";
+import { ResumeInput } from "@/types/api/input/resume";
 import { destroy, get, patch, post } from "@/lib/api";
 
 export const createResume = async (
@@ -9,8 +14,8 @@ export const createResume = async (
 };
 
 export const updateResume = async (
-  body: ResumeFormInterface,
-): Promise<ResumeFormInterface> => {
+  body: ProfileSection,
+): Promise<ProfileSection> => {
   const response = await patch(`/resume/${body.id}`, body);
   return response.data;
 };
@@ -20,7 +25,7 @@ export const deleteResume = async (id: string) => {
   return response.data;
 };
 
-export const getResume = async (id: string): Promise<ResumeFormInterface> => {
+export const getResume = async (id: string): Promise<ResumeInput> => {
   const response = await get(`/resume/${id}`);
 
   return response.data;
@@ -38,37 +43,4 @@ export const getAllResumes = async (
   });
 
   return response.data;
-};
-
-export const updateProfile = async (
-  id: string,
-  payload: Partial<ResumeFormInterface>,
-) => {
-  console.log("updateProfile", payload);
-};
-export const updateSummary = async (
-  id: string,
-  payload: Partial<ResumeFormInterface>,
-) => {
-  console.log("updateSummary", payload);
-};
-export const updateProfessionalExperience = async (
-  id: string,
-  payload: Partial<ResumeFormInterface>,
-) => {
-  console.log("professionalExperience", payload);
-};
-
-export const updateEducation = async (
-  id: string,
-  payload: Partial<ResumeFormInterface>,
-) => {
-  console.log("updateSummary", payload);
-};
-
-export const updateSkills = async (
-  id: string,
-  payload: Partial<ResumeFormInterface>,
-) => {
-  console.log("updateSummary", payload);
 };

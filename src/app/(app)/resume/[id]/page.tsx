@@ -1,8 +1,9 @@
 "use client";
-import { ResumeFormInterface } from "@/types/ResumeTypes";
 import { useSessionContext } from "@/components/SessionProvider";
+import { ResumeFormInterface } from "@/types/ResumeTypes";
 import CreateResumeView from "@/views/CreateResumeView";
 import { useQuery } from "@tanstack/react-query";
+import { resumeFormToInput } from "@/lib/utils";
 import { QueryKey } from "@/enums/queryKey";
 import { useParams } from "next/navigation";
 import { getResume } from "@/api/resume";
@@ -16,7 +17,11 @@ const Page = () => {
   const { data: resume, isLoading: isResumeLoading } =
     useQuery<ResumeFormInterface>({
       queryKey: [QueryKey.GET_RESUME, id],
-      queryFn: () => getResume(id),
+      queryFn: async () => {
+        const resume = await getResume(id);
+
+        return resumeFormToInput(resume);
+      },
       initialData: undefined,
     });
 

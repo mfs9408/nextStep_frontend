@@ -1,4 +1,3 @@
-import { PROFILE_FIELDS, SUMMARY_FIELDS } from "@/views/CreateResumeView/const";
 import SummarySection from "@/components/ResumeBlocks/SummarySection";
 import ProfileSection from "@/components/ResumeBlocks/ProfileSection";
 import ResumeLeftSide from "@/views/CreateResumeView/ResumeLeftSide";
@@ -7,6 +6,7 @@ import { useAutosaveResumeBlock } from "@/hooks/useAutosaveHook";
 import useCreateResumeHook from "@/hooks/useCreateResumeHook";
 import { ResumeFormInterface } from "@/types/ResumeTypes";
 import { AuthenticatedUser } from "@/types/session";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import React from "react";
@@ -16,13 +16,8 @@ interface CreateResumeViewProps {
   resumeData?: ResumeFormInterface;
 }
 
-const FIELDS_BY_BLOCK = {
-  Profile: PROFILE_FIELDS,
-  Summary: SUMMARY_FIELDS,
-} satisfies Record<string, readonly (keyof ResumeFormInterface)[]>;
-
 const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
-  const { activeBlock, setActiveBlock, formMethods, onSubmit } =
+  const { activeBlock, setActiveBlock, formMethods, onSubmit, resumeActions } =
     useCreateResumeHook({
       userData: user,
       resumeData,
@@ -32,9 +27,6 @@ const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
 
   const { autosaveStatus } = useAutosaveResumeBlock({
     formMethods,
-    activeBlock,
-    fieldsByBlock: FIELDS_BY_BLOCK,
-    onSubmit,
     debounceMs: 900,
     enabled: true,
   });
@@ -44,11 +36,16 @@ const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
       className="flex flex-col flex-1 gap-y-5 min-h-0 w-full"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h1 className="text-2xl">
-        {resumeData?.id ? "Update" : "Create"} resume
-      </h1>
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          {resumeData?.id ? "Update" : "Create"} resume
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Create, edit, and keep track of your resume versions.
+        </p>
+      </div>
       <Card className="flex flex-1 flex-row min-h-0 w-full p-8">
-        <div className={cn("lg:flex h-full w-1/5 border-r", "hidden")}>
+        <div className={cn("lg:flex h-full w-1/5 border-r min-h-0", "hidden")}>
           <ResumeLeftSide
             autosaveStatus={autosaveStatus}
             activeBlock={activeBlock}
@@ -58,10 +55,16 @@ const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
         <div className={cn("flex flex-1 flex-col min-h-0 w-full md:w-4/5")}>
           <div className="flex flex-1 flex-col min-h-0 w-full">
             {activeBlock === "Profile" && (
-              <ProfileSection formMethods={formMethods} />
+              <ProfileSection
+                formMethods={formMethods}
+                resumeActions={resumeActions}
+              />
             )}
             {activeBlock === "Summary" && (
-              <SummarySection formMethods={formMethods} />
+              <SummarySection
+                formMethods={formMethods}
+                resumeActions={resumeActions}
+              />
             )}
           </div>
           <ResumePageSwitcher
@@ -70,6 +73,7 @@ const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
           />
         </div>
       </Card>
+      <Button type="submit">submit</Button>
     </form>
   );
 };

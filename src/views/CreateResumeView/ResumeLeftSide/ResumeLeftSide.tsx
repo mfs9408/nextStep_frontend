@@ -42,7 +42,7 @@ export default function ResumeLeftSide({
   const config = statusConfig[autosaveStatus];
 
   return (
-    <aside className="flex h-full w-full flex-col">
+    <aside className="flex h-full w-full flex-col overflow-auto">
       <div className="mb-3">
         <div
           className={cn(

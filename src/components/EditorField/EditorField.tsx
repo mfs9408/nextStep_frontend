@@ -58,7 +58,7 @@ const ResumeEditorField = React.memo(
 
     useEffect(() => {
       if (editor && !editor.isDestroyed && value !== editor.getHTML()) {
-        // editor.commands.setContent(value || "", false);
+        editor.commands.setContent(value || "");
       }
     }, [editor?.view?.updateState, value]);
 

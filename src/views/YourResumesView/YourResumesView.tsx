@@ -66,6 +66,7 @@ const YourResumesView = ({
 
         <Card className="min-h-0 w-full flex-1 overflow-auto p-4 md:p-6">
           <div className="flex flex-row gap-x-4 items-center">
+            {/*TODO решить проблему гидрации с селектом*/}
             <Select
               label="Sort by"
               placeholder="Sort by"

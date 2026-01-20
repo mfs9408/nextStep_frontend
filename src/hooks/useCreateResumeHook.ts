@@ -1,9 +1,17 @@
 import {
+  createSummary,
+  createSummaryBullet,
+  deleteSummaryBullet,
+  reorderSummaryBullets,
+  updateSummary,
+  updateSummaryBullet,
+} from "@/api/summary";
+import {
   Blocks,
+  resumeActions,
   ResumeFormInterface,
 } from "@/types/ResumeTypes";
 import { PROFILE_FIELDS } from "@/views/CreateResumeView/const";
-import { createResume, updateResume } from "@/api/resume";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { SetStateActionType } from "@/types/general";
 import { AuthenticatedUser } from "@/types/session";
@@ -21,6 +29,7 @@ interface UseCreateResumeHookReturn {
   formMethods: UseFormReturn<ResumeFormInterface>;
   onSubmit: (data: ResumeFormInterface) => void;
   validateCurrentBlockData: () => Promise<boolean>;
+  resumeActions: resumeActions;
 }
 
 const useCreateResumeHook = ({
@@ -44,7 +53,8 @@ const useCreateResumeHook = ({
       isPublic: false,
       status: "DRAFT",
       summary: {
-        content: "",
+        id: undefined,
+        content: "Some default summary",
       },
       summaryBullets: [],
       ...resumeData,
@@ -59,10 +69,65 @@ const useCreateResumeHook = ({
   };
 
   const onSubmit = async (data: ResumeFormInterface) => {
-    if (!data.id) {
-      await createResume(data)
+    // saveProfile();
+    // if (!data.id) {
+    //   await createResume(data)
+    //     .then((data) => {
+    //       formMethods.setValue("id", data.id);
+    //     })
+    //     .catch((err) => {
+    //       toast.error(err.message);
+    //     });
+    //
+    //   return;
+    // }
+    //
+    // console.log("update");
+    //
+    // await updateResume(data).catch((err) => {
+    //   toast.error(err.message);
+    // });
+  };
+
+  const saveProfile = async () => {
+    // const resumeId = formMethods.getValues("id");
+    // const full = formMethods.getValues();
+    // const payload = pickResumeValue(full, fields) as ResumeInterface;
+    //
+    // if (!resumeId) {
+    //   await createResume(payload)
+    //     .then((data) => {
+    //       formMethods.setValue("id", data.id);
+    //     })
+    //     .catch((err) => {
+    //       toast.error(err.message);
+    //     });
+    //
+    //   const resumeId = formMethods.getValues("id");
+    //   if (!resumeId) return;
+    //   await createSummary({ content: "", resumeId: resumeId })
+    //     .then((data) => {
+    //       formMethods.setValue("summary.id", data.id);
+    //     })
+    //     .catch((err) => {
+    //       toast.error(err.message);
+    //     });
+    //
+    //   return;
+    // }
+    //
+    // await updateResume(payload).catch((err) => {
+    //   toast.error(err.message);
+    // });
+  };
+
+  const saveSummary = async () => {
+    const summary = formMethods.getValues("summary");
+    const resumeId = formMethods.getValues("id");
+    if (!summary.id && resumeId) {
+      await createSummary({ content: "", resumeId })
         .then((data) => {
-          formMethods.setValue("id", data.id);
+          formMethods.setValue("summary.id", data.id);
         })
         .catch((err) => {
           toast.error(err.message);
@@ -71,11 +136,18 @@ const useCreateResumeHook = ({
       return;
     }
 
-    console.log("update");
-
-    await updateResume(data).catch((err) => {
+    await updateSummary(summary).catch((err) => {
       toast.error(err.message);
     });
+  };
+
+  const resumeActions: resumeActions = {
+    summaryBullet: {
+      createSummaryBullet: createSummaryBullet,
+      updateSummaryBullet: updateSummaryBullet,
+      deleteSummaryBullet: deleteSummaryBullet,
+      reorderSummaryBullets: reorderSummaryBullets,
+    },
   };
 
   return {
@@ -84,6 +156,7 @@ const useCreateResumeHook = ({
     formMethods,
     onSubmit,
     validateCurrentBlockData,
+    resumeActions,
   };
 };
 

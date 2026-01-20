@@ -9,6 +9,23 @@ export type Blocks =
 
 export type STATUS = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
+export interface ProfileSection {
+  id?: string;
+  userId: string;
+  note: string;
+  resumeTitle: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  city: string;
+  linkedinUrl: string;
+  portfolioUrl: string;
+  contactEmail: string;
+  needsSponsorship: false;
+  status: STATUS;
+  isPublic: boolean;
+}
+
 export interface ResumeFormInterface {
   id?: string;
   userId: string;
@@ -25,15 +42,8 @@ export interface ResumeFormInterface {
   status: STATUS;
   isPublic: boolean;
 
-  summary: {
-    id?: string;
-    content: string;
-  };
-  summaryBullets: {
-    id?: string;
-    content: string;
-    order: number;
-  }[];
+  summary: Summary;
+  summaryBullets: bulletPoint[];
 }
 
 export interface ResumeInterface extends ResumeFormInterface {
@@ -44,4 +54,31 @@ export interface ResumeInterface extends ResumeFormInterface {
 
 export interface CommonSectionProps {
   formMethods: UseFormReturn<ResumeFormInterface>;
+  resumeActions: resumeActions;
 }
+
+export interface Summary {
+  id?: string;
+  resumeId: string;
+  content: string;
+}
+
+export type resumeActions = {
+  summaryBullet: {
+    createSummaryBullet: (body: bulletPoint) => Promise<bulletPoint>;
+    updateSummaryBullet: (body: bulletPoint) => Promise<bulletPoint>;
+    deleteSummaryBullet: (id: string) => Promise<boolean>;
+    reorderSummaryBullets: (body: {
+      idsInOrder: string[];
+      summaryId: string;
+    }) => void;
+  };
+};
+
+export type bulletPoint = {
+  id?: string;
+  summaryId: string;
+  source?: string;
+  content: string;
+  order: number;
+};

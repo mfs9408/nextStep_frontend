@@ -1,4 +1,4 @@
-import { Blocks } from "@/types/ResumeTypes";
+import { Blocks, ProfileSection } from "@/types/ResumeTypes";
 
 export const BLOCKS: Blocks[] = [
   "Profile",
@@ -8,7 +8,9 @@ export const BLOCKS: Blocks[] = [
   "Skills",
 ];
 
+export type ProfileField = keyof ProfileSection;
 export const PROFILE_FIELDS = [
+  "id",
   "resumeTitle",
   "note",
   "firstName",
@@ -18,6 +20,10 @@ export const PROFILE_FIELDS = [
   "contactEmail",
   "portfolioUrl",
   "linkedinUrl",
-] as const;
+  "needsSponsorship",
+  "status",
+] as const satisfies readonly ProfileField[];
 
-export const SUMMARY_FIELDS = ["summary"] as const;
+export const SUMMARY_FIELDS = ["summary", "summary.content"] as const;
+
+export const SUMMARY_BULLETS = [""];

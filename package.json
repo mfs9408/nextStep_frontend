@@ -11,6 +11,10 @@
   "dependencies": {
     "@tanstack/react-query": "^5.90.7",
     "@tiptap/core": "^3.13.0",
+    "@tiptap/extension-bold": "^3.14.0",
+    "@tiptap/extension-highlight": "^3.14.0",
+    "@tiptap/extension-italic": "^3.14.0",
+    "@tiptap/extension-placeholder": "^3.14.0",
     "@tiptap/pm": "^3.13.0",
     "@tiptap/react": "^3.13.0",
     "@tiptap/starter-kit": "^3.13.0",
