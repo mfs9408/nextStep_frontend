@@ -61,7 +61,16 @@ const SummaryBullet = ({
         <Controller
           control={control}
           name={`summaryBullets.${index}.content`}
-          render={({ field }) => <TextField {...field} />}
+          rules={{ required: "This field is required" }}
+          render={({ field, fieldState: { error } }) => (
+            <TextField
+              {...field}
+              label={`Bulletpoint ${index}`}
+              placeholder="A bullet"
+              containerClassName="w-full"
+              errorMessage={error?.message}
+            />
+          )}
         />
         {isAddButtonVisible && (
           <Button type="button" onClick={addField}>

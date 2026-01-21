@@ -41,9 +41,8 @@ export const useAutosaveResumeBlock = ({
         const index = Number(match[1]);
         const bullet = formMethods.getValues(`summaryBullets.${index}`);
 
-        if (!bullet.content?.trim()) return;
-
-        console.log({ bullet });
+        const ok = await formMethods.trigger(name as any);
+        if (!ok) return;
 
         if (!bullet.id) {
           toast.error("Summary bullet point is not saved yet");
