@@ -8,7 +8,7 @@ import {
 } from "@/api/summary";
 import {
   Blocks,
-  resumeActions,
+  ResumeActions,
   ResumeFormInterface,
 } from "@/types/ResumeTypes";
 import { PROFILE_FIELDS } from "@/views/CreateResumeView/const";
@@ -29,7 +29,7 @@ interface UseCreateResumeHookReturn {
   formMethods: UseFormReturn<ResumeFormInterface>;
   onSubmit: (data: ResumeFormInterface) => void;
   validateCurrentBlockData: () => Promise<boolean>;
-  resumeActions: resumeActions;
+  resumeActions: ResumeActions;
 }
 
 const useCreateResumeHook = ({
@@ -141,7 +141,7 @@ const useCreateResumeHook = ({
     });
   };
 
-  const resumeActions: resumeActions = {
+  const resumeActions: ResumeActions = {
     summaryBullet: {
       createSummaryBullet: createSummaryBullet,
       updateSummaryBullet: updateSummaryBullet,

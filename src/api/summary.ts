@@ -1,4 +1,5 @@
-import { bulletPoint, Summary } from "@/types/ResumeTypes";
+import { BulletPointOutput } from "@/types/api/output/resume";
+import { BulletPoint, Summary } from "@/types/ResumeTypes";
 import { destroy, patch, post } from "@/lib/api";
 
 export const createSummary = async (body: Summary): Promise<Summary> => {
@@ -7,19 +8,18 @@ export const createSummary = async (body: Summary): Promise<Summary> => {
 };
 
 export const updateSummary = async (body: Summary): Promise<Summary> => {
-  console.log(body);
   const response = await patch(`/resume/summary/${body.id}`, body);
 
   return response.data;
 };
 
-export const createSummaryBullet = async (body: bulletPoint) => {
+export const createSummaryBullet = async (body: BulletPointOutput) => {
   const response = await post(`/resume/summary/bullet-point`, body);
 
   return response.data;
 };
 
-export const updateSummaryBullet = async (body: bulletPoint) => {
+export const updateSummaryBullet = async (body: BulletPoint) => {
   const response = await patch(`/resume/summary/bullet-point/${body.id}`, body);
 
   return response.data;
@@ -35,7 +35,7 @@ export const reorderSummaryBullets = async (body: {
   idsInOrder: string[];
   summaryId: string;
 }) => {
-  const response = await post(
+  const response = await patch(
     `/resume/summary/bullet-point/${body.summaryId}/reorder`,
     body,
   );

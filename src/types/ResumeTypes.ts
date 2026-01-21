@@ -1,3 +1,4 @@
+import { BulletPointOutput } from "@/types/api/output/resume";
 import { UseFormReturn } from "react-hook-form";
 
 export type Blocks =
@@ -43,7 +44,7 @@ export interface ResumeFormInterface {
   isPublic: boolean;
 
   summary: Summary;
-  summaryBullets: bulletPoint[];
+  summaryBullets: BulletPoint[];
 }
 
 export interface ResumeInterface extends ResumeFormInterface {
@@ -54,7 +55,7 @@ export interface ResumeInterface extends ResumeFormInterface {
 
 export interface CommonSectionProps {
   formMethods: UseFormReturn<ResumeFormInterface>;
-  resumeActions: resumeActions;
+  resumeActions: ResumeActions;
 }
 
 export interface Summary {
@@ -63,10 +64,10 @@ export interface Summary {
   content: string;
 }
 
-export type resumeActions = {
+export type ResumeActions = {
   summaryBullet: {
-    createSummaryBullet: (body: bulletPoint) => Promise<bulletPoint>;
-    updateSummaryBullet: (body: bulletPoint) => Promise<bulletPoint>;
+    createSummaryBullet: (body: BulletPointOutput) => Promise<BulletPoint>;
+    updateSummaryBullet: (body: BulletPoint) => Promise<BulletPoint>;
     deleteSummaryBullet: (id: string) => Promise<boolean>;
     reorderSummaryBullets: (body: {
       idsInOrder: string[];
@@ -75,8 +76,8 @@ export type resumeActions = {
   };
 };
 
-export type bulletPoint = {
-  id?: string;
+export type BulletPoint = {
+  id: string;
   summaryId: string;
   source?: string;
   content: string;

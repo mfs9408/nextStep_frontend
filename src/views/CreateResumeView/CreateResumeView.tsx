@@ -6,7 +6,6 @@ import { useAutosaveResumeBlock } from "@/hooks/useAutosaveHook";
 import useCreateResumeHook from "@/hooks/useCreateResumeHook";
 import { ResumeFormInterface } from "@/types/ResumeTypes";
 import { AuthenticatedUser } from "@/types/session";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import React from "react";
@@ -29,6 +28,7 @@ const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
     formMethods,
     debounceMs: 900,
     enabled: true,
+    resumeActions,
   });
 
   return (
@@ -73,7 +73,6 @@ const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
           />
         </div>
       </Card>
-      <Button type="submit">submit</Button>
     </form>
   );
 };

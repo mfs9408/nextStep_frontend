@@ -1,24 +1,45 @@
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { commonEditorConfig } from "@/components/EditorField/editorConfig";
 import { Controller, useFieldArray } from "react-hook-form";
 import { CommonSectionProps } from "@/types/ResumeTypes";
+import SummaryBullet from "@/components/SummaryBullet";
 import EditorField from "@/components/EditorField";
 import { Button } from "@/components/ui/button";
-import TextField from "@/components/TextField";
-import { X } from "lucide-react";
 import { toast } from "sonner";
 import React from "react";
 
 type SummarySectionProps = CommonSectionProps;
 
 const SummarySection = ({
-  formMethods: { control, getValues },
+  formMethods,
   resumeActions,
 }: SummarySectionProps) => {
+  const { control, getValues } = formMethods;
   const { fields, append, remove, move, insert } = useFieldArray({
     control,
     name: "summaryBullets",
     keyName: "key",
   });
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
 
   const addField = async () => {
     const summaryId = getValues("summary.id");
@@ -31,17 +52,14 @@ const SummarySection = ({
     const order = fields.length + 1;
     const defaultContent = "Summary bullet point #" + order + "";
 
-    append({
-      content: defaultContent,
-      order: order,
-      summaryId: summaryId,
-    });
-
     await resumeActions.summaryBullet
       .createSummaryBullet({
         summaryId,
         order,
         content: defaultContent,
+      })
+      .then((item) => {
+        append(item);
       })
       .catch(() => {
         toast.error("Failed to create summary bullet point");
@@ -50,13 +68,40 @@ const SummarySection = ({
   };
 
   const removeField = async (index: number, id: string | undefined) => {
-    if (!id) return;
+    if (!id) {
+      toast.error("Failed to delete summary bullet point");
+      return;
+    }
     const hashedData = fields[index];
 
     remove(index);
     await resumeActions.summaryBullet.deleteSummaryBullet(id).catch(() => {
       insert(hashedData.order, hashedData);
       toast.error("Failed to delete summary bullet point");
+    });
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over?.id) {
+      const activeIndex = active.data.current?.sortable?.index;
+      const overIndex = over.data.current?.sortable?.index;
+      if (activeIndex !== undefined && overIndex !== undefined) {
+        move(activeIndex, overIndex);
+      }
+    }
+
+    const ids = getValues("summaryBullets").map((item) => item.id);
+    const summaryId = formMethods.getValues("summary.id");
+
+    if (!summaryId) {
+      toast.error("Summary is not saved yet");
+      return;
+    }
+
+    resumeActions.summaryBullet.reorderSummaryBullets({
+      idsInOrder: ids,
+      summaryId,
     });
   };
 
@@ -101,41 +146,37 @@ const SummarySection = ({
           </div>
           <div className="flex flex-col gap-y-2">
             <h3 className="text-md">Summary bullet points</h3>
-            {fields.length === 0 && (
-              <Button
-                aria-label="Add field"
-                variant="outline"
-                onClick={addField}
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={fields}
+                strategy={verticalListSortingStrategy}
               >
-                Add a bullet point
-              </Button>
-            )}
-            {fields.map((item, index) => (
-              <div key={item.id} className="flex gap-x-2">
-                <Controller
-                  control={control}
-                  name={`summaryBullets.${index}.content`}
-                  render={({ field }) => <TextField {...field} />}
-                />
-                {fields.length - 1 == index && (
-                  <Button type="button" onClick={addField}>
-                    Add
+                {fields.length === 0 && (
+                  <Button
+                    aria-label="Add field"
+                    variant="outline"
+                    onClick={addField}
+                  >
+                    Add a bullet point
                   </Button>
                 )}
-                <div className="flex justify-center items-center">
-                  <Button
-                    aria-label="Remove"
-                    variant="ghost"
-                    className="rounded-full"
-                    onClick={async () => {
-                      await removeField(index, item.id);
-                    }}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            ))}
+                {fields.map((item, index) => (
+                  <SummaryBullet
+                    key={item.key}
+                    index={index}
+                    item={item}
+                    isAddButtonVisible={fields.length - 1 == index}
+                    formMethods={formMethods}
+                    removeField={removeField}
+                    addField={addField}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
           </div>
         </section>
       </div>

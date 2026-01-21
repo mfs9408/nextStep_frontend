@@ -1,6 +1,6 @@
 import { PROFILE_FIELDS, SUMMARY_FIELDS } from "@/views/CreateResumeView/const";
+import { ResumeActions, ResumeFormInterface } from "@/types/ResumeTypes";
 import type { ProfileSection } from "@/types/api/output/resume";
-import type { ResumeFormInterface } from "@/types/ResumeTypes";
 import type { UseFormReturn } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 import { pickFormValues } from "@/lib/utils";
@@ -11,6 +11,7 @@ type AutosaveStatus = "idle" | "saving" | "saved" | "error";
 
 type Props = {
   formMethods: UseFormReturn<ResumeFormInterface>;
+  resumeActions: ResumeActions;
   debounceMs?: number;
   enabled?: boolean;
 };
@@ -19,6 +20,7 @@ export const useAutosaveResumeBlock = ({
   formMethods,
   debounceMs = 500,
   enabled = true,
+  resumeActions,
 }: Props) => {
   const [status, setStatus] = useState<AutosaveStatus>("idle");
 
@@ -33,7 +35,21 @@ export const useAutosaveResumeBlock = ({
 
     try {
       if (name.startsWith("summaryBullets")) {
-        return;
+        const match = name.match(/^summaryBullets\.(\d+)\./);
+        if (!match) return;
+
+        const index = Number(match[1]);
+        const bullet = formMethods.getValues(`summaryBullets.${index}`);
+
+        if (!bullet.content?.trim()) return;
+
+        console.log({ bullet });
+
+        if (!bullet.id) {
+          toast.error("Summary bullet point is not saved yet");
+        } else {
+          await resumeActions.summaryBullet.updateSummaryBullet(bullet);
+        }
       }
 
       if (name.startsWith("summary.content")) {

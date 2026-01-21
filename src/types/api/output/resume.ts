@@ -1,4 +1,4 @@
-import { STATUS } from "@/types/ResumeTypes";
+import { BulletPoint, STATUS } from "@/types/ResumeTypes";
 
 export interface ProfileSection {
   id?: string;
@@ -16,3 +16,7 @@ export interface ProfileSection {
   status: STATUS;
   isPublic: boolean;
 }
+
+export type BulletPointOutput = Omit<BulletPoint, "id"> & {
+  id?: string;
+};

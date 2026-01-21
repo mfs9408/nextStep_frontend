@@ -26,4 +26,4 @@ export const PROFILE_FIELDS = [
 
 export const SUMMARY_FIELDS = ["summary", "summary.content"] as const;
 
-export const SUMMARY_BULLETS = [""];
+export const SUMMARY_BULLETS = ["summaryBullets"];
