@@ -1,4 +1,4 @@
-import { bulletPoint, STATUS, Summary } from "@/types/ResumeTypes";
+import { BulletPoint, STATUS, Summary } from "@/types/ResumeTypes";
 
 export interface ResumeInput {
   id?: string;
@@ -20,5 +20,5 @@ export interface ResumeInput {
 }
 
 type SummaryInput = {
-  bullets: bulletPoint[];
+  bullets: BulletPoint[];
 } & Summary;

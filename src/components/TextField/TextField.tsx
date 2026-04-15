@@ -91,12 +91,12 @@ const TextField = ({
             {label}
           </label>
         )}
-        {errorMessage && (
-          <div className="w-full">
-            <p className="text-xs text-destructive">{errorMessage}</p>
-          </div>
-        )}
       </div>
+      {errorMessage && (
+        <div className="w-full">
+          <p className="text-xs text-destructive">{errorMessage}</p>
+        </div>
+      )}
     </div>
   );
 };

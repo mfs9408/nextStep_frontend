@@ -14,24 +14,28 @@ const Page = () => {
   const params = useParams();
   const id = params.id as string;
 
-  const { data: resume, isLoading: isResumeLoading } =
-    useQuery<ResumeFormInterface>({
-      queryKey: [QueryKey.GET_RESUME, id],
-      queryFn: async () => {
-        const resume = await getResume(id);
+  const { data, isLoading } = useQuery<ResumeFormInterface>({
+    queryKey: [QueryKey.GET_RESUME, id],
+    queryFn: async () => {
+      const resume = await getResume(id!);
+      return resumeFormToInput(resume);
+    },
+    enabled: !!id && !!user?.id,
+  });
 
-        return resumeFormToInput(resume);
-      },
-      initialData: undefined,
-    });
-
-  if (!user || isResumeLoading) {
-    return;
+  if (!user) {
+    return <div>No user</div>;
   }
 
-  if (!resume) return;
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  return <CreateResumeView user={user} resumeData={resume} />;
+  if (!data) {
+    return <div>No data</div>;
+  }
+
+  return <CreateResumeView user={user} resumeData={data} />;
 };
 
 export default Page;

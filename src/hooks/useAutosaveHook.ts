@@ -1,10 +1,10 @@
 import { PROFILE_FIELDS, SUMMARY_FIELDS } from "@/views/CreateResumeView/const";
 import { ResumeActions, ResumeFormInterface } from "@/types/ResumeTypes";
 import type { ProfileSection } from "@/types/api/output/resume";
+import { createResume, updateResume } from "@/api/resume";
 import type { UseFormReturn } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 import { pickFormValues } from "@/lib/utils";
-import { updateResume } from "@/api/resume";
 import { toast } from "sonner";
 
 type AutosaveStatus = "idle" | "saving" | "saved" | "error";
@@ -33,6 +33,28 @@ export const useAutosaveResumeBlock = ({
   ) {
     if (isSavingRef.current) return;
 
+    if (!formMethods.getValues("id")) {
+      const ok = await formMethods.trigger(PROFILE_FIELDS);
+      if (!ok) return;
+
+      const full = formMethods.getValues();
+
+      isSavingRef.current = true;
+      setStatus("saving");
+
+      await createResume(full)
+        .then((data) => {
+          formMethods.setValue("id", data.id);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+
+      setStatus("saved");
+      window.setTimeout(() => setStatus("idle"), 1200);
+      return;
+    }
+
     try {
       if (name.startsWith("summaryBullets")) {
         const match = name.match(/^summaryBullets\.(\d+)\./);
@@ -41,7 +63,7 @@ export const useAutosaveResumeBlock = ({
         const index = Number(match[1]);
         const bullet = formMethods.getValues(`summaryBullets.${index}`);
 
-        const ok = await formMethods.trigger(name as any);
+        const ok = await formMethods.trigger(name as never);
         if (!ok) return;
 
         if (!bullet.id) {

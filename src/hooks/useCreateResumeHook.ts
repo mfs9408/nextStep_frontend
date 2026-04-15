@@ -30,6 +30,7 @@ interface UseCreateResumeHookReturn {
   onSubmit: (data: ResumeFormInterface) => void;
   validateCurrentBlockData: () => Promise<boolean>;
   resumeActions: ResumeActions;
+  isBlockAvailable: (block: Blocks) => boolean;
 }
 
 const useCreateResumeHook = ({
@@ -91,9 +92,8 @@ const useCreateResumeHook = ({
 
   const saveProfile = async () => {
     // const resumeId = formMethods.getValues("id");
-    // const full = formMethods.getValues();
-    // const payload = pickResumeValue(full, fields) as ResumeInterface;
-    //
+    const full = formMethods.getValues();
+
     // if (!resumeId) {
     //   await createResume(payload)
     //     .then((data) => {
@@ -150,6 +150,28 @@ const useCreateResumeHook = ({
     },
   };
 
+  const isBlockAvailable = (block: Blocks) => {
+    const id = !!formMethods.getValues("id");
+
+    if (id) {
+      return true;
+    }
+
+    switch (block) {
+      case "Education":
+      case "Skills":
+      case "Professional experience":
+      case "Summary":
+        return false;
+
+      case "Profile":
+        return true;
+
+      default:
+        return false;
+    }
+  };
+
   return {
     activeBlock,
     setActiveBlock,
@@ -157,6 +179,7 @@ const useCreateResumeHook = ({
     onSubmit,
     validateCurrentBlockData,
     resumeActions,
+    isBlockAvailable,
   };
 };
 

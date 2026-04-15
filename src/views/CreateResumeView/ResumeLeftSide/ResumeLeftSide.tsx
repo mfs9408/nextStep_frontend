@@ -10,6 +10,7 @@ interface ResumeLeftSideProps {
   activeBlock: Blocks;
   setActiveBlock: SetStateActionType<Blocks>;
   autosaveStatus: AutosaveStatus;
+  isBlockAvailable: (block: Blocks) => boolean;
 }
 
 const statusConfig: Record<
@@ -38,6 +39,7 @@ export default function ResumeLeftSide({
   activeBlock,
   setActiveBlock,
   autosaveStatus,
+  isBlockAvailable,
 }: ResumeLeftSideProps) {
   const config = statusConfig[autosaveStatus];
 
@@ -64,15 +66,17 @@ export default function ResumeLeftSide({
 
         {BLOCKS.map((block) => {
           const isActive = activeBlock === block;
+          const isBlocked = isBlockAvailable(block);
 
           return (
             <button
               key={block}
               type="button"
-              onClick={() => setActiveBlock(block)}
+              onClick={() => isBlocked && setActiveBlock(block)}
               className={cn(
                 "group flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors cursor-pointer",
                 "hover:bg-accent/60 hover:text-foreground",
+                !isBlocked && "opacity-50 cursor-not-allowed",
                 isActive
                   ? "bg-accent text-foreground"
                   : "text-muted-foreground",

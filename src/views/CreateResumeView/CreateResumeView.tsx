@@ -16,7 +16,7 @@ interface CreateResumeViewProps {
 }
 
 const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
-  const { activeBlock, setActiveBlock, formMethods, onSubmit, resumeActions } =
+  const { activeBlock, setActiveBlock, formMethods, onSubmit, resumeActions, isBlockAvailable } =
     useCreateResumeHook({
       userData: user,
       resumeData,
@@ -50,6 +50,7 @@ const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
             autosaveStatus={autosaveStatus}
             activeBlock={activeBlock}
             setActiveBlock={setActiveBlock}
+            isBlockAvailable={isBlockAvailable}
           />
         </div>
         <div className={cn("flex flex-1 flex-col min-h-0 w-full md:w-4/5")}>

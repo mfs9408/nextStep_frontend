@@ -36,9 +36,7 @@ export function resumeFormToInput(form: ResumeInput): ResumeFormInterface {
 
   return {
     ...rest,
-    summary: {
-      ...summary,
-    },
-    summaryBullets: summary.bullets,
+    summary,
+    summaryBullets: summary?.bullets || [],
   };
 }
