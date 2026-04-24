@@ -1,6 +1,7 @@
 import { PROFILE_FIELDS, SUMMARY_FIELDS } from "@/views/CreateResumeView/const";
 import { ResumeActions, ResumeFormInterface } from "@/types/ResumeTypes";
 import type { ProfileSection } from "@/types/api/output/resume";
+import { createSummary, updateSummary } from "@/api/summary";
 import { createResume, updateResume } from "@/api/resume";
 import type { UseFormReturn } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
@@ -27,6 +28,16 @@ export const useAutosaveResumeBlock = ({
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isSavingRef = useRef(false);
 
+  const save = () => {
+    isSavingRef.current = true;
+    setStatus("saving");
+  };
+
+  const saveSuccess = () => {
+    setStatus("saved");
+    window.setTimeout(() => setStatus("idle"), 1200);
+  };
+
   async function routeSaveByField(
     name: string,
     formMethods: UseFormReturn<ResumeFormInterface>,
@@ -39,19 +50,28 @@ export const useAutosaveResumeBlock = ({
 
       const full = formMethods.getValues();
 
-      isSavingRef.current = true;
-      setStatus("saving");
+      save();
 
-      await createResume(full)
+      const id = await createResume(full)
         .then((data) => {
           formMethods.setValue("id", data.id);
+          return data.id;
         })
         .catch((err) => {
           toast.error(err.message);
         });
 
-      setStatus("saved");
-      window.setTimeout(() => setStatus("idle"), 1200);
+      if (!id) return;
+
+      await createSummary({ content: "", resumeId: id })
+        .then((data) => {
+          formMethods.setValue("summary.id", data.id);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+
+      saveSuccess();
       return;
     }
 
@@ -77,7 +97,12 @@ export const useAutosaveResumeBlock = ({
         const ok = await formMethods.trigger(SUMMARY_FIELDS);
         if (!ok) return;
 
-        // saveSummary(formMethods);
+        const fullSummary = formMethods.getValues("summary");
+
+        await updateSummary(fullSummary).catch((err) => {
+          toast.error(err.message);
+        });
+
         return;
       }
 
@@ -90,13 +115,11 @@ export const useAutosaveResumeBlock = ({
           PROFILE_FIELDS,
         ) as ProfileSection;
 
-        isSavingRef.current = true;
-        setStatus("saving");
+        save();
 
         await updateResume(profileValues);
 
-        setStatus("saved");
-        window.setTimeout(() => setStatus("idle"), 1200);
+        saveSuccess();
         return;
       }
     } catch (e) {

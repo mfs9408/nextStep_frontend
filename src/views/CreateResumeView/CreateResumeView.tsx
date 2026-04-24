@@ -16,11 +16,17 @@ interface CreateResumeViewProps {
 }
 
 const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
-  const { activeBlock, setActiveBlock, formMethods, onSubmit, resumeActions, isBlockAvailable } =
-    useCreateResumeHook({
-      userData: user,
-      resumeData,
-    });
+  const {
+    activeBlock,
+    setActiveBlock,
+    formMethods,
+    onSubmit,
+    resumeActions,
+    isBlockAvailable,
+  } = useCreateResumeHook({
+    userData: user,
+    resumeData,
+  });
 
   const { handleSubmit } = formMethods;
 
