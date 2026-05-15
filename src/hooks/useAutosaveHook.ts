@@ -1,7 +1,7 @@
 import { PROFILE_FIELDS, SUMMARY_FIELDS } from "@/views/CreateResumeView/const";
-import { ResumeActions, ResumeFormInterface } from "@/types/ResumeTypes";
 import type { ProfileSection } from "@/types/api/output/resume";
 import { createSummary, updateSummary } from "@/api/summary";
+import { ResumeFormInterface } from "@/types/ResumeTypes";
 import { createResume, updateResume } from "@/api/resume";
 import type { UseFormReturn } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
@@ -12,7 +12,6 @@ type AutosaveStatus = "idle" | "saving" | "saved" | "error";
 
 type Props = {
   formMethods: UseFormReturn<ResumeFormInterface>;
-  resumeActions: ResumeActions;
   debounceMs?: number;
   enabled?: boolean;
 };
@@ -21,7 +20,6 @@ export const useAutosaveResumeBlock = ({
   formMethods,
   debounceMs = 500,
   enabled = true,
-  resumeActions,
 }: Props) => {
   const [status, setStatus] = useState<AutosaveStatus>("idle");
 
@@ -36,6 +34,7 @@ export const useAutosaveResumeBlock = ({
   const saveSuccess = () => {
     setStatus("saved");
     window.setTimeout(() => setStatus("idle"), 1200);
+    isSavingRef.current = false;
   };
 
   async function routeSaveByField(
@@ -44,58 +43,63 @@ export const useAutosaveResumeBlock = ({
   ) {
     if (isSavingRef.current) return;
 
-    if (!formMethods.getValues("id")) {
-      const ok = await formMethods.trigger(PROFILE_FIELDS);
-      if (!ok) return;
-
-      const full = formMethods.getValues();
-
-      save();
-
-      const id = await createResume(full)
-        .then((data) => {
-          formMethods.setValue("id", data.id);
-          return data.id;
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
-
-      if (!id) return;
-
-      await createSummary({ content: "", resumeId: id })
-        .then((data) => {
-          formMethods.setValue("summary.id", data.id);
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
-
-      saveSuccess();
-      return;
-    }
-
     try {
-      if (name.startsWith("summaryBullets")) {
-        const match = name.match(/^summaryBullets\.(\d+)\./);
-        if (!match) return;
-
-        const index = Number(match[1]);
-        const bullet = formMethods.getValues(`summaryBullets.${index}`);
-
-        const ok = await formMethods.trigger(name as never);
+      if (!formMethods.getValues("id")) {
+        const ok = await formMethods.trigger(PROFILE_FIELDS);
         if (!ok) return;
 
-        if (!bullet.id) {
-          toast.error("Summary bullet point is not saved yet");
-        } else {
-          await resumeActions.summaryBullet.updateSummaryBullet(bullet);
+        const full = formMethods.getValues();
+
+        save();
+
+        const id = await createResume(full)
+          .then((data) => {
+            formMethods.setValue("id", data.id);
+
+            return data.id;
+          })
+          .catch((err) => {
+            toast.error(err.message);
+          });
+
+        if (!id) {
+          saveSuccess();
+          return;
         }
+
+        await createSummary({ content: "", resumeId: id })
+          .then((data) => {
+            formMethods.setValue("summary.id", data.id);
+          })
+          .catch((err) => {
+            toast.error(err.message);
+          });
+
+        return;
       }
+
+      // if (name.startsWith("summaryBullets")) {
+      //   const match = name.match(/^summaryBullets\.(\d+)\./);
+      //   if (!match) return;
+      //
+      //   const index = Number(match[1]);
+      //   const bullet = formMethods.getValues(`summaryBullets.${index}`);
+      //
+      //   const ok = await formMethods.trigger(name as never);
+      //   if (!ok) return;
+      //
+      //   if (!bullet.id) {
+      //     toast.error("Summary bullet point is not saved yet");
+      //   } else {
+      //     await resumeActions.summaryBullet.updateSummaryBullet(bullet);
+      //   }
+      // }
 
       if (name.startsWith("summary.content")) {
         const ok = await formMethods.trigger(SUMMARY_FIELDS);
         if (!ok) return;
+
+        save();
 
         const fullSummary = formMethods.getValues("summary");
 
@@ -119,7 +123,6 @@ export const useAutosaveResumeBlock = ({
 
         await updateResume(profileValues);
 
-        saveSuccess();
         return;
       }
     } catch (e) {
@@ -127,7 +130,7 @@ export const useAutosaveResumeBlock = ({
       toast.error("Autosave failed");
       window.setTimeout(() => setStatus("idle"), 1500);
     } finally {
-      isSavingRef.current = false;
+      saveSuccess();
     }
   }
 
