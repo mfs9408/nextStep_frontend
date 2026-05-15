@@ -1,7 +1,7 @@
 import { PROFILE_FIELDS, SUMMARY_FIELDS } from "@/views/CreateResumeView/const";
+import { ResumeActions, ResumeFormInterface } from "@/types/ResumeTypes";
 import type { ProfileSection } from "@/types/api/output/resume";
 import { createSummary, updateSummary } from "@/api/summary";
-import { ResumeFormInterface } from "@/types/ResumeTypes";
 import { createResume, updateResume } from "@/api/resume";
 import type { UseFormReturn } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
@@ -14,12 +14,14 @@ type Props = {
   formMethods: UseFormReturn<ResumeFormInterface>;
   debounceMs?: number;
   enabled?: boolean;
+  resumeActions: ResumeActions;
 };
 
 export const useAutosaveResumeBlock = ({
   formMethods,
   debounceMs = 500,
   enabled = true,
+  resumeActions,
 }: Props) => {
   const [status, setStatus] = useState<AutosaveStatus>("idle");
 
@@ -78,22 +80,22 @@ export const useAutosaveResumeBlock = ({
         return;
       }
 
-      // if (name.startsWith("summaryBullets")) {
-      //   const match = name.match(/^summaryBullets\.(\d+)\./);
-      //   if (!match) return;
-      //
-      //   const index = Number(match[1]);
-      //   const bullet = formMethods.getValues(`summaryBullets.${index}`);
-      //
-      //   const ok = await formMethods.trigger(name as never);
-      //   if (!ok) return;
-      //
-      //   if (!bullet.id) {
-      //     toast.error("Summary bullet point is not saved yet");
-      //   } else {
-      //     await resumeActions.summaryBullet.updateSummaryBullet(bullet);
-      //   }
-      // }
+      if (name.startsWith("summaryBullets")) {
+        const match = name.match(/^summaryBullets\.(\d+)\./);
+        if (!match) return;
+
+        const index = Number(match[1]);
+        const bullet = formMethods.getValues(`summaryBullets.${index}`);
+
+        const ok = await formMethods.trigger(name as never);
+        if (!ok) return;
+
+        if (!bullet.id) {
+          toast.error("Summary bullet point is not saved yet");
+        } else {
+          await resumeActions.summaryBullet.updateSummaryBullet(bullet);
+        }
+      }
 
       if (name.startsWith("summary.content")) {
         const ok = await formMethods.trigger(SUMMARY_FIELDS);
@@ -139,6 +141,7 @@ export const useAutosaveResumeBlock = ({
     if (!enabled) return;
 
     const subscription = formMethods.watch((_, { name }) => {
+      console.log(name);
       if (!name) return;
 
       const { isDirty } = formMethods.getFieldState(name);

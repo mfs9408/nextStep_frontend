@@ -34,6 +34,7 @@ const CreateResumeView = ({ user, resumeData }: CreateResumeViewProps) => {
     formMethods,
     debounceMs: 900,
     enabled: true,
+    resumeActions,
   });
 
   return (
