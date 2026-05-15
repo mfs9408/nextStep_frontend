@@ -1,24 +1,15 @@
 import {
-  closestCenter,
-  DndContext,
-  DragEndEvent,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
   SortableContext,
-  sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { commonEditorConfig } from "@/components/EditorField/editorConfig";
-import { Controller, useFieldArray } from "react-hook-form";
+import { useSummarySectionHook } from "@/hooks/useSummarySectionHook";
+import { closestCenter, DndContext } from "@dnd-kit/core";
 import { CommonSectionProps } from "@/types/ResumeTypes";
 import SummaryBullet from "@/components/SummaryBullet";
 import EditorField from "@/components/EditorField";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { Controller } from "react-hook-form";
 import React from "react";
 
 type SummarySectionProps = CommonSectionProps;
@@ -27,83 +18,12 @@ const SummarySection = ({
   formMethods,
   resumeActions,
 }: SummarySectionProps) => {
-  const { control, getValues } = formMethods;
-  const { fields, append, remove, move, insert } = useFieldArray({
-    control,
-    name: "summaryBullets",
-    keyName: "key",
-  });
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  );
-
-  const addField = async () => {
-    const summaryId = getValues("summary.id");
-
-    if (!summaryId) {
-      toast.error("Summary is not saved yet");
-      return;
-    }
-
-    const order = fields.length + 1;
-    const defaultContent = "Summary bullet point #" + order + "";
-
-    await resumeActions.summaryBullet
-      .createSummaryBullet({
-        summaryId,
-        order,
-        content: defaultContent,
-      })
-      .then((item) => {
-        append(item);
-      })
-      .catch(() => {
-        toast.error("Failed to create summary bullet point");
-        remove(order);
-      });
-  };
-
-  const removeField = async (index: number, id: string | undefined) => {
-    if (!id) {
-      toast.error("Failed to delete summary bullet point");
-      return;
-    }
-    const hashedData = fields[index];
-
-    remove(index);
-    await resumeActions.summaryBullet.deleteSummaryBullet(id).catch(() => {
-      insert(hashedData.order, hashedData);
-      toast.error("Failed to delete summary bullet point");
+  const { sensors, addField, removeField, handleDragEnd, fields } =
+    useSummarySectionHook({
+      formMethods,
+      resumeActions,
     });
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over?.id) {
-      const activeIndex = active.data.current?.sortable?.index;
-      const overIndex = over.data.current?.sortable?.index;
-      if (activeIndex !== undefined && overIndex !== undefined) {
-        move(activeIndex, overIndex);
-      }
-    }
-
-    const ids = getValues("summaryBullets").map((item) => item.id);
-    const summaryId = formMethods.getValues("summary.id");
-
-    if (!summaryId) {
-      toast.error("Summary is not saved yet");
-      return;
-    }
-
-    resumeActions.summaryBullet.reorderSummaryBullets({
-      idsInOrder: ids,
-      summaryId,
-    });
-  };
+  const { control } = formMethods;
 
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-auto p-6">
@@ -113,7 +33,7 @@ const SummarySection = ({
       </div>
       <div className="space-y-10">
         <section>
-          <div>
+          <div className="mb-2">
             <h3 className="text-base font-semibold">Your summary</h3>
             <p className="mt-1 text-sm text-muted-foreground">
               Provide a short information about yourself and your work history.
@@ -144,8 +64,15 @@ const SummarySection = ({
               )}
             />
           </div>
-          <div className="flex flex-col gap-y-2">
-            <h3 className="text-md">Summary bullet points</h3>
+        </section>
+        <section>
+          <div className="flex flex-col gap-y-4">
+            <div>
+              <h3 className="text-base font-semibold">Summary bullet points</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Provide a short information about yourself and achievements.
+              </p>
+            </div>
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
@@ -173,6 +100,7 @@ const SummarySection = ({
                     formMethods={formMethods}
                     removeField={removeField}
                     addField={addField}
+                    isGrabButtonVisible={fields.length > 1}
                   />
                 ))}
               </SortableContext>

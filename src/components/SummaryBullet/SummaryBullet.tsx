@@ -15,6 +15,7 @@ interface SummaryBulletProps {
   formMethods: UseFormReturn<ResumeFormInterface>;
   removeField: (index: number, id: string) => void;
   addField: () => void;
+  isGrabButtonVisible: boolean;
 }
 
 const SummaryBullet = ({
@@ -24,6 +25,7 @@ const SummaryBullet = ({
   formMethods,
   removeField,
   addField,
+  isGrabButtonVisible,
 }: SummaryBulletProps) => {
   const { control } = formMethods;
 
@@ -41,6 +43,14 @@ const SummaryBullet = ({
     transition,
   };
 
+  const removeBullet = async () => {
+    if (!item.id) {
+      toast.error("Summary bullet point is not removed yet");
+      return;
+    }
+    removeField(index, item.id);
+  };
+
   return (
     <>
       <div
@@ -49,15 +59,19 @@ const SummaryBullet = ({
         ref={setNodeRef}
         style={style}
       >
-        <button
-          {...attributes}
-          {...listeners}
-          ref={setActivatorNodeRef}
-          draggable
-          className="cursor-grab active:cursor-grabbing touch-none"
-        >
-          <GripVertical className="h-4 w-4 my-3 ml-3 mr-1 text-primary" />
-        </button>
+        {isGrabButtonVisible ? (
+          <button
+            {...attributes}
+            {...listeners}
+            ref={setActivatorNodeRef}
+            draggable
+            className="cursor-grab active:cursor-grabbing touch-none"
+          >
+            <GripVertical className="h-4 w-4 my-3 ml-0 mr-1 text-primary" />
+          </button>
+        ) : (
+          <div className="h-4 w-6" />
+        )}
         <Controller
           control={control}
           name={`summaryBullets.${index}.content`}
@@ -65,7 +79,7 @@ const SummaryBullet = ({
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label={`Bulletpoint ${index}`}
+              label={`Bulletpoint ${index + 1}`}
               placeholder="A bullet"
               containerClassName="w-full"
               errorMessage={error?.message}
@@ -82,13 +96,7 @@ const SummaryBullet = ({
             aria-label="Remove"
             variant="ghost"
             className="rounded-full"
-            onClick={async () => {
-              if (!item.id) {
-                toast.error("Summary bullet point is not removed yet");
-                return;
-              }
-              removeField(index, item.id);
-            }}
+            onClick={removeBullet}
           >
             <X className="h-4 w-4" />
           </Button>

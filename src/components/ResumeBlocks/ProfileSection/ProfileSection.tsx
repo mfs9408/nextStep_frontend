@@ -20,14 +20,14 @@ export default function ProfileSection({
 
       <div className="space-y-10">
         <section>
-          <div>
+          <div className="mb-4">
             <h3 className="text-base font-semibold">Resume info</h3>
             <p className="mt-1 text-sm text-muted-foreground">
               Name your resume so you can quickly find it later.
             </p>
           </div>
 
-          <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2">
             <Controller
               name="resumeTitle"
               rules={{ required: "This field is required" }}

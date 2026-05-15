@@ -127,6 +127,7 @@ export const useAutosaveResumeBlock = ({
       }
     } catch (e) {
       setStatus("error");
+      isSavingRef.current = false;
       toast.error("Autosave failed");
       window.setTimeout(() => setStatus("idle"), 1500);
     } finally {
